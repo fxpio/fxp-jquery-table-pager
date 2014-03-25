@@ -1,0 +1,72 @@
+//
+// Table Pager
+// --------------------------------------------------
+
+.table-pager {
+    @actionHeight: 27px;
+
+    padding: 0 4px !important;
+    min-height: 35px;
+    white-space: inherit !important;
+
+    > .table-pager-group {
+        display: inline-block;
+
+        > .btn-group {
+            margin: 4px 5px 4px 0;
+            white-space: nowrap;
+        }
+    }
+
+    .table-pager-size-list {
+        padding: 0 2px;
+        text-align: left;
+        height: @actionHeight;
+        min-width: 60px;
+
+        &:focus {
+            background-color: @input-bg;
+        }
+    }
+
+    .table-pager-page-number {
+        display: inline-block;
+        padding-left: 6px;
+        padding-right: 6px;
+        height: @actionHeight;
+        width: 41px;
+        text-align: right;
+    }
+
+    .table-pager-split,
+    .table-pager-page-count {
+        display: inline-block;
+        line-height: @actionHeight;
+    }
+
+    .table-pager-split {
+        margin: 0 5px;
+    }
+
+    .table-pager-elements {
+        padding-top: 4px;
+        padding-bottom: 3px;
+
+        .table-pager-split {
+            line-height: inherit;
+        }
+    }
+}
+
+caption[data-table-pager-loading-info=true] {
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    font-size: @table-pager-loading-size;
+    background: @table-pager-loading-bg;
+    color: @table-pager-loading-color;
+
+    > i:before {
+        content: @table-pager-loading-icon;
+    }
+}
