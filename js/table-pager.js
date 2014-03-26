@@ -25,7 +25,7 @@
         this.guid          = jQuery.guid;
         this.options       = $.extend({}, TablePager.DEFAULTS, options);
         this.$element      = $(element);
-        this.$table        = this.$element.parents('table:first');
+        this.$table        = $('#' + this.$element.attr('data-table-id'));
         this.sizeList      = new Array();
         this.pageSize      = this.options.pageSize;
         this.pageNumber    = this.options.pageNumber;
@@ -35,6 +35,10 @@
         this.sortOrder     = this.options.sortOrder;
 
         this.$table
+            .on('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
+        ;
+
+        this.$element
             .on('change.st.tablepager', this.options.selectors.sizeList, $.proxy(onPageSizeAction, this))
             .on('click.st.tablepager', this.options.selectors.startPage, $.proxy(onStartPageAction, this))
             .on('click.st.tablepager', this.options.selectors.previousPage, $.proxy(onPreviousPageAction, this))
@@ -42,7 +46,6 @@
             .on('click.st.tablepager', this.options.selectors.nextPage, $.proxy(onNextPageAction, this))
             .on('click.st.tablepager', this.options.selectors.endPage, $.proxy(onEndPageAction, this))
             .on('click.st.tablepager', this.options.selectors.refresh, $.proxy(onRefreshAction, this))
-            .on('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
         ;
 
         var $cols = $(this.options.selectors.sortable, this.$table);
@@ -79,13 +82,13 @@
         loadingTemplate:  '<caption><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         selectors:        {
-            sizeList:     '> thead select.table-pager-size-list',
-            startPage:    '> thead button.table-pager-start-page',
-            previousPage: '> thead button.table-pager-previous-page',
-            pageNumber:   '> thead input.table-pager-page-number',
-            nextPage:     '> thead button.table-pager-next-page',
-            endPage:      '> thead button.table-pager-end-page',
-            refresh:      '> thead button.table-pager-refresh',
+            sizeList:     'select.table-pager-size-list',
+            startPage:    'button.table-pager-start-page',
+            previousPage: 'button.table-pager-previous-page',
+            pageNumber:   'input.table-pager-page-number',
+            nextPage:     'button.table-pager-next-page',
+            endPage:      'button.table-pager-end-page',
+            refresh:      'button.table-pager-refresh',
             sortable:     '> thead > tr:last > th[data-table-pager-sortable=true]'
         }
     };
@@ -401,13 +404,13 @@
             return;
         }
 
-        $(this.options.selectors.sizeList, this.$table).attr('disabled', 'disabled');
-        $(this.options.selectors.startPage, this.$table).attr('disabled', 'disabled');
-        $(this.options.selectors.previousPage, this.$table).attr('disabled', 'disabled');
-        $(this.options.selectors.pageNumber, this.$table).attr('disabled', 'disabled');
-        $(this.options.selectors.nextPage, this.$table).attr('disabled', 'disabled');
-        $(this.options.selectors.endPage, this.$table).attr('disabled', 'disabled');
-        $(this.options.selectors.refresh, this.$table).attr('disabled', 'disabled');
+        $(this.options.selectors.sizeList, this.$element).attr('disabled', 'disabled');
+        $(this.options.selectors.startPage, this.$element).attr('disabled', 'disabled');
+        $(this.options.selectors.previousPage, this.$element).attr('disabled', 'disabled');
+        $(this.options.selectors.pageNumber, this.$element).attr('disabled', 'disabled');
+        $(this.options.selectors.nextPage, this.$element).attr('disabled', 'disabled');
+        $(this.options.selectors.endPage, this.$element).attr('disabled', 'disabled');
+        $(this.options.selectors.refresh, this.$element).attr('disabled', 'disabled');
 
         var self = this;
         var event = $.Event('table-pager-refreshing', {'tablePager': this});
@@ -554,6 +557,9 @@
      */
     TablePager.prototype.destroy = function () {
         this.$table
+            .off('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
+        ;
+        this.$element
             .off('change.st.tablepager', this.options.selectors.sizeList, $.proxy(onPageSizeAction, this))
             .off('click.st.tablepager', this.options.selectors.startPage, $.proxy(onStartPageAction, this))
             .off('click.st.tablepager', this.options.selectors.previousPage, $.proxy(onPreviousPageAction, this))
@@ -561,7 +567,6 @@
             .off('click.st.tablepager', this.options.selectors.nextPage, $.proxy(onNextPageAction, this))
             .off('click.st.tablepager', this.options.selectors.endPage, $.proxy(onEndPageAction, this))
             .off('click.st.tablepager', this.options.selectors.refresh, $.proxy(onRefreshAction, this))
-            .off('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
         ;
 
         this.$element.$element.removeData('st.tablepager');
@@ -574,7 +579,7 @@
      * @private
      */
     function refreshSizeList (rebuild) {
-        var $sizeList = $(this.options.selectors.sizeList, this.$table);
+        var $sizeList = $(this.options.selectors.sizeList, this.$element);
 
         $sizeList.attr('disabled', 'disabled');
 
@@ -604,8 +609,8 @@
      * @private
      */
     function refreshPageNumber () {
-        var $pageNumber = $(this.options.selectors.pageNumber, this.$table);
-        var $pageCount = $('> thead span.table-pager-page-count', this.$table);
+        var $pageNumber = $(this.options.selectors.pageNumber, this.$element);
+        var $pageCount = $('span.table-pager-page-count', this.$element);
 
         $pageNumber.attr('disabled', 'disabled');
         $pageNumber.prop('value', this.getPageNumber());
@@ -623,11 +628,11 @@
      * @private
      */
     function refreshPageButtons () {
-        var $start = $(this.options.selectors.startPage, this.$table);
-        var $previous = $(this.options.selectors.previousPage, this.$table);
-        var $next = $(this.options.selectors.nextPage, this.$table);
-        var $end = $(this.options.selectors.endPage, this.$table);
-        var $refresh = $(this.options.selectors.refresh, this.$table);
+        var $start = $(this.options.selectors.startPage, this.$element);
+        var $previous = $(this.options.selectors.previousPage, this.$element);
+        var $next = $(this.options.selectors.nextPage, this.$element);
+        var $end = $(this.options.selectors.endPage, this.$element);
+        var $refresh = $(this.options.selectors.refresh, this.$element);
 
         $start.attr('disabled', 'disabled');
         $previous.attr('disabled', 'disabled');
@@ -653,7 +658,7 @@
      * @private
      */
     function refreshPageElements () {
-        var $elements = $('> thead div.table-pager-elements', this.$table);
+        var $elements = $('div.table-pager-elements', this.$element);
 
         $('> span.table-pager-start', $elements).text(this.getStart());
         $('> span.table-pager-end', $elements).text(this.getEnd());
