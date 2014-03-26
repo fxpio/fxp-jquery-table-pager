@@ -70,3 +70,41 @@ caption[data-table-pager-loading-info=true] {
         content: @table-pager-loading-icon;
     }
 }
+
+// sortable
+.table {
+    > thead {
+        th {
+            &[data-table-pager-sortable=true] {
+                &:not([data-table-sort]) {
+                    > i.table-sort-icon {
+                        &:before {
+                            content: @table-sort-icon;
+                        }
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    color: @table-pager-sort-header-hover-color;
+                }
+
+                > i.table-sort-icon {
+                    display: inline-block;
+                }
+
+                &[data-table-sort=asc] {
+                    > i.table-sort-icon {
+                        color: @table-pager-sort-icon-sorting-color;
+                    }
+                }
+
+                &[data-table-sort=desc] {
+                    > i.table-sort-icon {
+                        color: @table-pager-sort-icon-sorting-color;
+                    }
+                }
+            }
+        }
+    }
+}

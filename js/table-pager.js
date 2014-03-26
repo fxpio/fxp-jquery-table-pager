@@ -22,15 +22,17 @@
      * @this
      */
     var TablePager = function (element, options) {
-        this.guid       = jQuery.guid;
-        this.options    = $.extend({}, TablePager.DEFAULTS, options);
-        this.$element   = $(element);
-        this.$table     = this.$element.parents('table:first');
-        this.sizeList   = new Array();
-        this.pageSize   = this.options.pageSize;
-        this.pageNumber = this.options.pageNumber;
-        this.size       = this.options.size || this.getSizeInTable();
-        this.rows       = new Array();
+        this.guid          = jQuery.guid;
+        this.options       = $.extend({}, TablePager.DEFAULTS, options);
+        this.$element      = $(element);
+        this.$table        = this.$element.parents('table:first');
+        this.sizeList      = new Array();
+        this.pageSize      = this.options.pageSize;
+        this.pageNumber    = this.options.pageNumber;
+        this.size          = this.options.size || this.getSizeInTable();
+        this.rows          = new Array();
+        this.multiSortable = this.options.multiSortable;
+        this.sortOrder     = this.options.sortOrder;
 
         this.$table
             .on('change.st.tablepager', this.options.selectors.sizeList, $.proxy(onPageSizeAction, this))
@@ -40,7 +42,18 @@
             .on('click.st.tablepager', this.options.selectors.nextPage, $.proxy(onNextPageAction, this))
             .on('click.st.tablepager', this.options.selectors.endPage, $.proxy(onEndPageAction, this))
             .on('click.st.tablepager', this.options.selectors.refresh, $.proxy(onRefreshAction, this))
+            .on('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
         ;
+
+        var $cols = $(this.options.selectors.sortable, this.$table);
+
+        for (var i = 0; i < $cols.size(); i++) {
+            var $icon = $('> i.table-sort-icon', $cols.eq(i));
+
+            if (0 == $icon.size()) {
+                $cols.eq(i).append(this.options.sortIconTemplate);
+            }
+        }
 
         this.setSizeList(this.options.sizeList);
         this.refreshPager(true);
@@ -52,24 +65,28 @@
      * @type Array
      */
     TablePager.DEFAULTS = {
-        locale:          'en',
-        pageSize:        100,
-        pageNumber:      1,
-        addAllInSize:    false,
-        sizeList:        [2, 5, 10, 25, 50, 100, 150, 200],
-        url:             null,
-        method:          'post',
-        ajaxId:          null,
-        parameters:      {},
-        loadingTemplate: '<caption><i class="fa fa-spin"></i></caption>',
-        selectors:       {
+        locale:           'en',
+        pageSize:         100,
+        pageNumber:       1,
+        addAllInSize:     false,
+        sizeList:         [2, 5, 10, 25, 50, 100, 150, 200],
+        url:              null,
+        method:           'post',
+        ajaxId:           null,
+        parameters:       {},
+        multiSortable:    false,
+        sortOrder:        new Array(),
+        loadingTemplate:  '<caption><i class="fa fa-spin"></i></caption>',
+        sortIconTemplate: '<i class="table-sort-icon fa"></i>',
+        selectors:        {
             sizeList:     '> thead select.table-pager-size-list',
             startPage:    '> thead button.table-pager-start-page',
             previousPage: '> thead button.table-pager-previous-page',
             pageNumber:   '> thead input.table-pager-page-number',
             nextPage:     '> thead button.table-pager-next-page',
             endPage:      '> thead button.table-pager-end-page',
-            refresh:      '> thead button.table-pager-refresh'
+            refresh:      '> thead button.table-pager-refresh',
+            sortable:     '> thead > tr:last > th[data-table-pager-sortable=true]'
         }
     };
 
@@ -82,6 +99,114 @@
         en: {
             all: 'All'
         }
+    };
+
+    /**
+     * Set multi sortable.
+     *
+     * @param Boolean sortable
+     *
+     * @this
+     */
+    TablePager.prototype.setMultiSortable = function (sortable) {
+        this.multiSortable = sortable;
+    };
+
+    /**
+     * Check if pager is multi sortable.
+     *
+     * @return Boolean
+     *
+     * @this
+     */
+    TablePager.prototype.isMultiSortable = function () {
+        return this.multiSortable;
+    };
+
+    /**
+     * Add column allowed to sorting.
+     *
+     * @param String column The column name
+     * @param String sort   The direction of order (asc , desc)
+     *
+     * @this
+     */
+    TablePager.prototype.addSortable = function (column, sort) {
+        var $col = $('> thead > tr:last > th[data-col-name=' + column + ']', this.$table);
+
+        $col.attr('data-table-pager-sortable', 'true');
+
+        if ('asc' === sort || 'desc' === sort) {
+            $col.attr('data-table-sort', sort);
+        }
+
+        if (0 == $col.find('> i.table-sort-icon').size()) {
+            $col.append(this.options.sortIconTemplate);
+        }
+    };
+
+    /**
+     * Remove column allowed to sorting.
+     *
+     * @param String column
+     *
+     * @this
+     */
+    TablePager.prototype.removeSortable = function (column) {
+        var $col = $('> thead > tr:last > th[data-col-name=' + column + ']', this.$table);
+
+        $col.find('> i.table-sort-icon').remove();
+        $col
+            .removeAttr('data-table-pager-sortable')
+            .removeAttr('data-table-sort')
+        ;
+    };
+
+    /**
+     * Remove column allowed to sorting.
+     *
+     * @param String  column    The column name
+     * @param Boolean multiple  False if reset sort
+     * @param String  direction The direction of sort
+     *
+     * @this
+     */
+    TablePager.prototype.sortColumn = function (column, multiple, direction) {
+        multiple = undefined == multiple ? false : multiple;
+        multiple = multiple ? this.isMultiSortable() : multiple;
+        var oldDirection = undefined == direction ? 'asc' : direction;
+
+        if (undefined == direction || 'desc' == direction) {
+            direction = 'asc';
+        } else if ('asc' == direction) {
+            direction = 'desc';
+        }
+
+        if (!multiple && this.sortOrder.length > 1) {
+            direction = oldDirection;
+        }
+
+        var sortOrder = multiple ? this.sortOrder : new Array();
+        var sortDef = new Array();
+
+        if (-1 == $.inArray(column, sortOrder)) {
+            sortOrder.push(column);
+        }
+
+        for (var i = 0; i < sortOrder.length; i++) {
+            if (column == sortOrder[i]) {
+                sortDef.push({name: column, sort: direction});
+            } else {
+                var $th = this.$table.find('> thead >tr:last > th[data-col-name=' + sortOrder[i] + ']');
+
+                if (undefined != $th.attr('data-table-sort')) {
+                    sortDef.push({name: sortOrder[i], sort: $th.attr('data-table-sort')});
+                }
+            }
+        }
+
+        $.proxy(refreshColumnHeaders, this)(sortDef);
+        this.refresh();
     };
 
     /**
@@ -291,6 +416,7 @@
             data[this.options.ajaxId + '_ps'] = this.getPageSize();
             data[this.options.ajaxId + '_pn'] = this.getPageNumber();
             data[this.options.ajaxId + '_p'] = this.options.parameters;
+            data[this.options.ajaxId + '_sc'] = getSortColumns.apply(this);
 
         createLoadingInfo.apply(this);
         this.$element.trigger(event);
@@ -345,6 +471,7 @@
                 self.pageNumber = data.pageNumber;
                 self.pageSize = data.pageSize;
                 self.size = data.size;
+                $.proxy(refreshColumnHeaders, self)(data.sortColumns);
                 self.$element.trigger(event);
                 self.refreshPager();
             },
@@ -434,6 +561,7 @@
             .off('click.st.tablepager', this.options.selectors.nextPage, $.proxy(onNextPageAction, this))
             .off('click.st.tablepager', this.options.selectors.endPage, $.proxy(onEndPageAction, this))
             .off('click.st.tablepager', this.options.selectors.refresh, $.proxy(onRefreshAction, this))
+            .off('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
         ;
 
         this.$element.$element.removeData('st.tablepager');
@@ -533,6 +661,47 @@
     }
 
     /**
+     * Refresh the column headers.
+     *
+     * @param Array sortDefinitions The sort column definitions
+     *
+     * @this
+     * @private
+     */
+    function refreshColumnHeaders (sortDefinitions) {
+        this.sortOrder = new Array();
+        var $ths = this.$table.find('> thead > tr:last > th[data-table-sort]');
+        $ths.removeAttr('data-table-sort');
+
+        for (var i = 0; i < sortDefinitions.length; i++) {
+            var $th = this.$table.find('> thead >tr:last > th[data-col-name=' + sortDefinitions[i]['name'] + ']');
+
+            $th.attr('data-table-sort', sortDefinitions[i]['sort']);
+            this.sortOrder.push(sortDefinitions[i]['name']);
+        }
+    }
+
+    /**
+     * Get the sort column definitions.
+     *
+     * @this
+     * @private
+     */
+    function getSortColumns () {
+        var sortDef = new Array();
+
+        for (var i = 0; i < this.sortOrder.length; i++) {
+            var $th = this.$table.find('> thead >tr:last > th[data-col-name=' + this.sortOrder[i] + ']');
+
+            if (undefined != $th.attr('data-table-sort')) {
+                sortDef.push({name: this.sortOrder[i], sort: $th.attr('data-table-sort')});
+            }
+        }
+
+        return sortDef;
+    }
+
+    /**
      * Action on click to refresh button.
      *
      * @param jQuery.Event event
@@ -614,6 +783,19 @@
      */
     function onRefreshAction (event) {
         this.refresh();
+    }
+
+    /**
+     * Action on click to sortable column header.
+     *
+     * @param jQuery.Event event
+     *
+     * @this
+     * @private
+     */
+    function onSortColumnAction (event) {
+        var $col = $(event.target);
+        this.sortColumn($col.attr('data-col-name'), event.ctrlKey, $col.attr('data-table-sort'));
     }
 
     /**
