@@ -422,7 +422,7 @@
             data[this.options.ajaxId + '_sc'] = getSortColumns.apply(this);
 
         createLoadingInfo.apply(this);
-        this.$element.trigger(event);
+        this.$table.trigger(event);
 
         $.ajax( this.options.url, {
             type: this.options.method,
@@ -475,7 +475,7 @@
                 self.pageSize = data.pageSize;
                 self.size = data.size;
                 $.proxy(refreshColumnHeaders, self)(data.sortColumns);
-                self.$element.trigger(event);
+                self.$table.trigger(event);
                 self.refreshPager();
             },
             error: function (data, textStatus, jqXHR) {
@@ -487,7 +487,7 @@
                 var event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
 
                 removeLoadingInfo.apply(self);
-                self.$element.trigger(event);
+                self.$table.trigger(event);
                 self.refreshPager();
             }
         });
