@@ -74,7 +74,7 @@
         addAllInSize:     false,
         sizeList:         [2, 5, 10, 25, 50, 100, 150, 200],
         url:              null,
-        method:           'post',
+        method:           'get',
         ajaxId:           null,
         parameters:       {},
         multiSortable:    false,
