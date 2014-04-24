@@ -7,7 +7,12 @@
  * file that was distributed with this source code.
  */
 
-+function ($) {
+/*global jQuery*/
+
+/**
+ * @param {jQuery} $
+ */
+(function ($) {
     'use strict';
 
     // TABLE PAGER CLASS DEFINITION
@@ -19,4 +24,4 @@
         }
     });
 
-}(jQuery);
+}(jQuery));
