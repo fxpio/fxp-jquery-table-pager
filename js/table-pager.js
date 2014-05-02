@@ -7,8 +7,326 @@
  * file that was distributed with this source code.
  */
 
-+function ($) {
+/*global jQuery*/
+/*global window*/
+/*global TablePager*/
+
+/**
+ * @param {jQuery} $
+ *
+ * @typedef {TablePager} TablePager
+ */
+(function ($) {
     'use strict';
+
+    /**
+     * Refresh the size list of pager.
+     *
+     * @param {TablePager} self    The table pager instance
+     * @param {boolean}    rebuild Rebuild the pager or not
+     *
+     * @private
+     */
+    function refreshSizeList(self, rebuild) {
+        var $sizeList = $(self.options.selectors.sizeList, self.$element),
+            sizeList = self.getSizeList(),
+            $opt,
+            i;
+
+        $sizeList.attr('disabled', 'disabled');
+
+        if (rebuild) {
+            $sizeList.empty();
+
+            for (i = 0; i < sizeList.length; i += 1) {
+                $opt = $('<option value="' + sizeList[i].value + '">' + sizeList[i].label + '</option>');
+
+                if (sizeList[i].value === self.pageSize) {
+                    $opt.prop('selected', 'selected');
+                }
+
+                $sizeList.append($opt);
+            }
+        }
+
+        if (sizeList.length > 1) {
+            $sizeList.removeAttr('disabled');
+        }
+    }
+
+    /**
+     * Refresh the page number of pager.
+     *
+     * @param {TablePager} self The table pager instance
+     *
+     * @private
+     */
+    function refreshPageNumber(self) {
+        var $pageNumber = $(self.options.selectors.pageNumber, self.$element),
+            $pageCount = $('span.table-pager-page-count', self.$element);
+
+        $pageNumber.attr('disabled', 'disabled');
+        $pageNumber.prop('value', self.getPageNumber());
+        $pageCount.text(self.getPageCount());
+
+        if (self.getPageCount() > 1) {
+            $pageNumber.removeAttr('disabled');
+        }
+    }
+
+    /**
+     * Refresh the page buttons.
+     *
+     * @param {TablePager} self The table pager instance
+     *
+     * @private
+     */
+    function refreshPageButtons(self) {
+        var $start = $(self.options.selectors.startPage, self.$element),
+            $previous = $(self.options.selectors.previousPage, self.$element),
+            $next = $(self.options.selectors.nextPage, self.$element),
+            $end = $(self.options.selectors.endPage, self.$element),
+            $refresh = $(self.options.selectors.refresh, self.$element);
+
+        $start.attr('disabled', 'disabled');
+        $previous.attr('disabled', 'disabled');
+        $next.attr('disabled', 'disabled');
+        $end.attr('disabled', 'disabled');
+        $refresh.removeAttr('disabled');
+
+        if (self.pageNumber > 1) {
+            $start.removeAttr('disabled');
+            $previous.removeAttr('disabled');
+        }
+
+        if (self.pageNumber < self.getPageCount()) {
+            $next.removeAttr('disabled');
+            $end.removeAttr('disabled');
+        }
+    }
+
+    /**
+     * Refresh the page elements.
+     *
+     * @param {TablePager} self The table pager instance
+     *
+     * @private
+     */
+    function refreshPageElements(self) {
+        var $elements = $('div.table-pager-elements', self.$element);
+
+        $('> span.table-pager-start', $elements).text(self.getStart());
+        $('> span.table-pager-end', $elements).text(self.getEnd());
+        $('> span.table-pager-size', $elements).text(self.getSize());
+    }
+
+    /**
+     * Refresh the column headers.
+     *
+     * @param {TablePager} self            The table pager instance
+     * @param {Array}      sortDefinitions The sort column definitions
+     *
+     * @typedef {Array} self.sortOrder The sort order list
+     *
+     * @private
+     */
+    function refreshColumnHeaders(self, sortDefinitions) {
+        self.sortOrder = [];
+
+        var $ths = self.$table.find('> thead > tr:last > th[data-table-sort]'),
+            $th,
+            i;
+
+        $ths.removeAttr('data-table-sort');
+
+        for (i = 0; i < sortDefinitions.length; i += 1) {
+            $th = self.$table.find('> thead >tr:last > th[data-col-name=' + sortDefinitions[i].name + ']');
+
+            $th.attr('data-table-sort', sortDefinitions[i].sort);
+            self.sortOrder.push(sortDefinitions[i].name);
+        }
+    }
+
+    /**
+     * Get the sort column definitions.
+     *
+     * @param {TablePager} self The table pager instance
+     *
+     * @private
+     */
+    function getSortColumns(self) {
+        var sortDef = [],
+            $th,
+            i;
+
+        for (i = 0; i < self.sortOrder.length; i += 1) {
+            $th = self.$table.find('> thead >tr:last > th[data-col-name=' + self.sortOrder[i] + ']');
+
+            if (undefined !== $th.attr('data-table-sort')) {
+                sortDef.push({name: self.sortOrder[i], sort: $th.attr('data-table-sort')});
+            }
+        }
+
+        return sortDef;
+    }
+
+    /**
+     * Creates the loading info hover the table.
+     *
+     * @param {TablePager} self The table pager instance
+     *
+     * @typedef {jQuery} self.$loadingInfo The jQuery instance of loading info
+     *
+     * @private
+     */
+    function createLoadingInfo(self) {
+        var $parent = self.$table.parents('.table-responsive:first'),
+            marginTop = $('> thead', self.$table).outerHeight(),
+            width = $parent.size() > 0 ? $parent.outerWidth() : self.$table.outerWidth(),
+            height = $('> tbody', self.$table).outerHeight() + marginTop;
+
+        self.$loadingInfo = $(self.options.loadingTemplate);
+        self.$loadingInfo.attr('data-table-pager-loading-info', 'true');
+        self.$loadingInfo.css('margin-top', -marginTop);
+        self.$loadingInfo.css('padding-top', height / 3);
+        self.$loadingInfo.css('width', width);
+        self.$loadingInfo.css('height', height);
+        self.$table.prepend(self.$loadingInfo);
+    }
+
+    /**
+     * Removes the loading info hover the table.
+     *
+     * @param {TablePager} self The table pager instance
+     *
+     * @typedef {jQuery} self.$loadingInfo The jQuery instance of loading info
+     *
+     * @private
+     */
+    function removeLoadingInfo(self) {
+        self.$loadingInfo.remove();
+        delete self.$loadingInfo;
+    }
+
+    /**
+     * Action on click to refresh button.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onPageSizeAction(event) {
+        event.data.setPageSize($(event.target).prop('value'));
+    }
+
+    /**
+     * Action on click to start page button.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onStartPageAction(event) {
+        event.data.startPage();
+    }
+
+    /**
+     * Action on click to previous page button.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onPreviousPageAction(event) {
+        event.data.previousPage();
+    }
+
+    /**
+     * Action on change page number input.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onPageNumberAction(event) {
+        event.data.setPageNumber($(event.target).prop('value'));
+    }
+
+    /**
+     * Action on click to next page button.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onNextPageAction(event) {
+        event.data.nextPage();
+    }
+
+    /**
+     * Action on click to end page button.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onEndPageAction(event) {
+        event.data.endPage();
+    }
+
+    /**
+     * Action on click to refresh button.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onRefreshAction(event) {
+        event.data.refresh();
+    }
+
+    /**
+     * Action on click to sortable column header.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onSortColumnAction(event) {
+        var self = event.data,
+            $col = $(event.target),
+            multiple = event.ctrlKey ? self.isMultiSortable() : event.ctrlKey,
+            direction = $col.attr('data-table-sort'),
+            oldDirection = (undefined === direction) ? 'asc' : direction;
+
+        if (undefined === direction || 'desc' === direction) {
+            direction = 'asc';
+        } else if ('asc' === direction) {
+            direction = 'desc';
+        }
+
+        if (!multiple && self.sortOrder.length > 1) {
+            direction = oldDirection;
+        }
+
+        self.sortColumn($col.attr('data-col-name'), multiple, direction);
+    }
 
     // TABLE PAGER CLASS DEFINITION
     // ============================
@@ -16,56 +334,57 @@
     /**
      * @constructor
      *
-     * @param htmlString|Element|Array|jQuery element
-     * @param Array                           options
+     * @param {string|elements|object|jQuery} element
+     * @param {object}                        options
      *
-     * @this
+     * @this TablePager
      */
     var TablePager = function (element, options) {
         this.guid          = jQuery.guid;
         this.options       = $.extend({}, TablePager.DEFAULTS, options);
         this.$element      = $(element);
         this.$table        = $('#' + this.$element.attr('data-table-id'));
-        this.sizeList      = new Array();
+        this.sizeList      = [];
         this.pageSize      = this.options.pageSize;
         this.pageNumber    = this.options.pageNumber;
         this.size          = this.options.size || this.getSizeInTable();
-        this.rows          = new Array();
-        this.multiSortable = this.options.multiSortable;
+        this.rows          = [];
         this.sortOrder     = this.options.sortOrder;
+        this.setMultiSortable(this.options.multiSortable);
 
         this.$table
-            .on('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
-        ;
+            .on('click.st.tablepager', this.options.selectors.sortable, this, onSortColumnAction);
 
         this.$element
-            .on('change.st.tablepager', this.options.selectors.sizeList, $.proxy(onPageSizeAction, this))
-            .on('click.st.tablepager', this.options.selectors.startPage, $.proxy(onStartPageAction, this))
-            .on('click.st.tablepager', this.options.selectors.previousPage, $.proxy(onPreviousPageAction, this))
-            .on('change.st.tablepager', this.options.selectors.pageNumber, $.proxy(onPageNumberAction, this))
-            .on('click.st.tablepager', this.options.selectors.nextPage, $.proxy(onNextPageAction, this))
-            .on('click.st.tablepager', this.options.selectors.endPage, $.proxy(onEndPageAction, this))
-            .on('click.st.tablepager', this.options.selectors.refresh, $.proxy(onRefreshAction, this))
-        ;
+            .on('change.st.tablepager', this.options.selectors.sizeList, this, onPageSizeAction)
+            .on('click.st.tablepager', this.options.selectors.startPage, this, onStartPageAction)
+            .on('click.st.tablepager', this.options.selectors.previousPage, this, onPreviousPageAction)
+            .on('change.st.tablepager', this.options.selectors.pageNumber, this, onPageNumberAction)
+            .on('click.st.tablepager', this.options.selectors.nextPage, this, onNextPageAction)
+            .on('click.st.tablepager', this.options.selectors.endPage, this, onEndPageAction)
+            .on('click.st.tablepager', this.options.selectors.refresh, this, onRefreshAction);
 
-        var $cols = $(this.options.selectors.sortable, this.$table);
+        var $cols = $(this.options.selectors.sortable, this.$table),
+            $icon,
+            i;
 
-        for (var i = 0; i < $cols.size(); i++) {
-            var $icon = $('> i.table-sort-icon', $cols.eq(i));
+        for (i = 0; i < $cols.size(); i += 1) {
+            $icon = $('> i.table-sort-icon', $cols.eq(i));
 
-            if (0 == $icon.size()) {
+            if (0 === $icon.size()) {
                 $cols.eq(i).append(this.options.sortIconTemplate);
             }
         }
 
         this.setSizeList(this.options.sizeList);
         this.refreshPager(true);
-    };
+    },
+        old;
 
     /**
      * Defaults options.
      *
-     * @type Array
+     * @type {object}
      */
     TablePager.DEFAULTS = {
         locale:           'en',
@@ -78,7 +397,7 @@
         ajaxId:           null,
         parameters:       {},
         multiSortable:    false,
-        sortOrder:        new Array(),
+        sortOrder:        [],
         loadingTemplate:  '<caption><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         selectors:        {
@@ -96,7 +415,7 @@
     /**
      * Defaults languages.
      *
-     * @type Array
+     * @type {object}
      */
     TablePager.LANGUAGES = {
         en: {
@@ -107,9 +426,9 @@
     /**
      * Set multi sortable.
      *
-     * @param Boolean sortable
+     * @param {boolean} sortable
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.setMultiSortable = function (sortable) {
         this.multiSortable = sortable;
@@ -118,117 +437,77 @@
     /**
      * Check if pager is multi sortable.
      *
-     * @return Boolean
+     * @returns {boolean}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.isMultiSortable = function () {
         return this.multiSortable;
     };
 
     /**
-     * Add column allowed to sorting.
-     *
-     * @param String column The column name
-     * @param String sort   The direction of order (asc , desc)
-     *
-     * @this
-     */
-    TablePager.prototype.addSortable = function (column, sort) {
-        var $col = $('> thead > tr:last > th[data-col-name=' + column + ']', this.$table);
-
-        $col.attr('data-table-pager-sortable', 'true');
-
-        if ('asc' === sort || 'desc' === sort) {
-            $col.attr('data-table-sort', sort);
-        }
-
-        if (0 == $col.find('> i.table-sort-icon').size()) {
-            $col.append(this.options.sortIconTemplate);
-        }
-    };
-
-    /**
      * Remove column allowed to sorting.
      *
-     * @param String column
+     * @param {String}  column    The column name
+     * @param {boolean} multiple  False if reset sort
+     * @param {string}  direction The direction of sort (asc or desc)
      *
-     * @this
-     */
-    TablePager.prototype.removeSortable = function (column) {
-        var $col = $('> thead > tr:last > th[data-col-name=' + column + ']', this.$table);
-
-        $col.find('> i.table-sort-icon').remove();
-        $col
-            .removeAttr('data-table-pager-sortable')
-            .removeAttr('data-table-sort')
-        ;
-    };
-
-    /**
-     * Remove column allowed to sorting.
-     *
-     * @param String  column    The column name
-     * @param Boolean multiple  False if reset sort
-     * @param String  direction The direction of sort
-     *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.sortColumn = function (column, multiple, direction) {
-        multiple = undefined == multiple ? false : multiple;
+        multiple = undefined === multiple ? false : multiple;
         multiple = multiple ? this.isMultiSortable() : multiple;
-        var oldDirection = undefined == direction ? 'asc' : direction;
 
-        if (undefined == direction || 'desc' == direction) {
+        var sortOrder,
+            sortDef,
+            $th,
+            i;
+
+        if ('asc' !== direction || 'desc' !== direction) {
             direction = 'asc';
-        } else if ('asc' == direction) {
-            direction = 'desc';
         }
 
-        if (!multiple && this.sortOrder.length > 1) {
-            direction = oldDirection;
-        }
+        sortOrder = multiple ? this.sortOrder : [];
+        sortDef = [];
 
-        var sortOrder = multiple ? this.sortOrder : new Array();
-        var sortDef = new Array();
-
-        if (-1 == $.inArray(column, sortOrder)) {
+        if (-1 === $.inArray(column, sortOrder)) {
             sortOrder.push(column);
         }
 
-        for (var i = 0; i < sortOrder.length; i++) {
-            if (column == sortOrder[i]) {
+        for (i = 0; i < sortOrder.length; i += 1) {
+            if (column === sortOrder[i]) {
                 sortDef.push({name: column, sort: direction});
             } else {
-                var $th = this.$table.find('> thead >tr:last > th[data-col-name=' + sortOrder[i] + ']');
+                $th = this.$table.find('> thead >tr:last > th[data-col-name=' + sortOrder[i] + ']');
 
-                if (undefined != $th.attr('data-table-sort')) {
+                if (undefined !== $th.attr('data-table-sort')) {
                     sortDef.push({name: sortOrder[i], sort: $th.attr('data-table-sort')});
                 }
             }
         }
 
-        $.proxy(refreshColumnHeaders, this)(sortDef);
+        refreshColumnHeaders(this, sortDef);
         this.refresh();
     };
 
     /**
      * Set size list.
      *
-     * @param Array sizes The list of size list
+     * @param {Array.<number>} sizes The list of size list
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.setSizeList = function (sizes) {
-        var sizesList = new Array();
+        var sizesList = [],
+            i;
 
-        for (var i = 0; i < sizes.length; i++) {
+        for (i = 0; i < sizes.length; i += 1) {
             if ('object' === typeof sizes[i]) {
                 sizesList.push({value: sizes[i].value, label: sizes[i].label});
-                continue;
-            }
 
-            sizesList.push({value: sizes[i], label: sizes[i]});
+            } else {
+                sizesList.push({value: sizes[i], label: sizes[i]});
+            }
         }
 
         if (this.options.addAllInSize) {
@@ -241,9 +520,9 @@
     /**
      * Get size list.
      *
-     * @return Array The list of object value/label
+     * @returns {Array.<number, string>} The list of object value/label
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getSizeList = function () {
         return this.sizeList;
@@ -252,12 +531,12 @@
     /**
      * Set page size.
      *
-     * @param Number size The page size
+     * @param {number} size The page size
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.setPageSize = function (size) {
-        this.pageSize = parseInt(size);
+        this.pageSize = parseInt(size, 10);
         this.pageNumber = 1;
         this.refresh();
     };
@@ -265,9 +544,9 @@
     /**
      * Get page size.
      *
-     * @return Number
+     * @returns {number}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getPageSize = function () {
         return this.pageSize;
@@ -276,9 +555,9 @@
     /**
      * Get start number.
      *
-     * @return Number
+     * @returns {number}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getStart = function () {
         return (this.getPageNumber() - 1) * this.getPageSize() + 1;
@@ -287,20 +566,20 @@
     /**
      * Get end number.
      *
-     * @return Number
+     * @returns {number}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getEnd = function () {
-        return 0 == this.getPageSize() ? this.getSize() : Math.min(this.getSize(), this.getPageSize() * this.getPageNumber());
+        return 0 === this.getPageSize() ? this.getSize() : Math.min(this.getSize(), this.getPageSize() * this.getPageNumber());
     };
 
     /**
      * Set page number.
      *
-     * @param Number page The page number
+     * @param {number} page The page number
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.setPageNumber = function (page) {
         this.pageNumber = Math.min(page, this.getPageCount());
@@ -311,9 +590,9 @@
     /**
      * Get page number.
      *
-     * @return Number
+     * @returns {number}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getPageNumber = function () {
         return this.pageNumber;
@@ -322,20 +601,20 @@
     /**
      * Get page count.
      *
-     * @return Number
+     * @returns {number}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getPageCount = function () {
-        return 0 == this.pageSize ? 1 : Math.ceil(this.size / this.pageSize);
+        return 0 === this.pageSize ? 1 : Math.ceil(this.size / this.pageSize);
     };
 
     /**
      * Get size.
      *
-     * @return Number
+     * @returns {number}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getSize = function () {
         return this.size;
@@ -344,9 +623,9 @@
     /**
      * Get size in table.
      *
-     * @return Number
+     * @returns {number}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getSizeInTable = function () {
         return this.$table.find('> tbody > tr[data-row-id]').size();
@@ -355,9 +634,9 @@
     /**
      * Get rows.
      *
-     * @return Array
+     * @returns {Array.<number, object>}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getRows = function () {
         return this.rows;
@@ -366,41 +645,46 @@
     /**
      * Get item.
      *
-     * @param Number row
+     * @param {number} row The index of row
      *
-     * @return Object
+     * @returns {object}
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.getItem = function (row) {
-        if (undefined == this.rows[row]) {
+        var rows = this.getRows();
+
+        if (undefined === rows[row]) {
             return null;
         }
 
-        return this.rows[row];
+        return rows[row];
     };
 
     /**
      * Refresh pager.
      *
-     * @param Boolean rebuild
+     * @param {boolean} rebuild
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.refreshPager = function (rebuild) {
-        $.proxy(refreshSizeList, this)(rebuild);
-        $.proxy(refreshPageNumber, this)();
-        $.proxy(refreshPageButtons, this)();
-        $.proxy(refreshPageElements, this)();
+        refreshSizeList(this, rebuild);
+        refreshPageNumber(this);
+        refreshPageButtons(this);
+        refreshPageElements(this);
     };
 
     /**
      * Refresh data.
      *
-     * @this
+     * @typedef {jQuery} TablePager.$loadingInfo The jQuery instance of loading info
+     * @typedef {Array}  data.sortColumns
+     *
+     * @this TablePager
      */
     TablePager.prototype.refresh = function () {
-        if (undefined != this.$loadingInfo) {
+        if (undefined !== this.$loadingInfo) {
             return;
         }
 
@@ -412,52 +696,64 @@
         $(this.options.selectors.endPage, this.$element).attr('disabled', 'disabled');
         $(this.options.selectors.refresh, this.$element).attr('disabled', 'disabled');
 
-        var self = this;
-        var event = $.Event('table-pager-refreshing', {'tablePager': this});
-        var data = {};
-            data['ajax_id'] = this.options.ajaxId;
-            data[this.options.ajaxId + '_ps'] = this.getPageSize();
-            data[this.options.ajaxId + '_pn'] = this.getPageNumber();
-            data[this.options.ajaxId + '_p'] = this.options.parameters;
-            data[this.options.ajaxId + '_sc'] = getSortColumns.apply(this);
+        var self = this,
+            event = $.Event('table-pager-refreshing', {'tablePager': this}),
+            data = {};
 
-        createLoadingInfo.apply(this);
+        data.ajax_id = this.options.ajaxId;
+        data[this.options.ajaxId + '_ps'] = this.getPageSize();
+        data[this.options.ajaxId + '_pn'] = this.getPageNumber();
+        data[this.options.ajaxId + '_p'] = this.options.parameters;
+        data[this.options.ajaxId + '_sc'] = getSortColumns(this);
+
+        createLoadingInfo(this);
         this.$table.trigger(event);
 
-        $.ajax( this.options.url, {
+        $.ajax(this.options.url, {
             type: this.options.method,
             data: data,
             success: function (data, textStatus, jqXHR) {
-                var $body = $('> tbody', self.$table);
-                var $cols = $('> thead > tr:last', self.$table).children();
-                var content = new Array();
-                var ret = {
-                    data:       data,
-                    textStatus: textStatus,
-                    jqXHR:      jqXHR
-                };
-                var event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
+                var rowId = '_row_id',
+                    attrColumns = '_attr_columns',
+                    $body = $('> tbody', self.$table),
+                    $cols = $('> thead > tr:last', self.$table).eq(0).children(),
+                    content = [],
+                    ret = {
+                        data:       data,
+                        textStatus: textStatus,
+                        jqXHR:      jqXHR
+                    },
+                    event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret}),
+                    $tr,
+                    colName,
+                    $td,
+                    attrs,
+                    attr,
+                    i,
+                    j;
 
-                for (var i = 0; i < data.rows.length; i++) {;
-                    var $tr = $('<tr></tr>');
+                for (i = 0; i < data.rows.length; i += 1) {
+                    $tr = $('<tr></tr>');
 
-                    if (undefined != data.rows[i]['_row_id']) {
-                        $tr.attr('data-row-id', data.rows[i]['_row_id']);
+                    if (undefined !== data.rows[i][rowId]) {
+                        $tr.attr('data-row-id', data.rows[i][rowId]);
                     }
 
-                    for (var j = 0; j < $cols.size(); j++) {
-                        var colName = $cols.eq(j).attr('data-col-name');
-                        var $td = $('<td></td>');
+                    for (j = 0; j < $cols.size(); j += 1) {
+                        colName = $cols.eq(j).attr('data-col-name');
+                        $td = $('<td></td>');
 
-                        if (undefined != data.rows[i]['_attr_columns'] && data.rows[i]['_attr_columns'][colName]) {
-                            var attrs = data.rows[i]['_attr_columns'][colName];
+                        if (undefined !== data.rows[i][attrColumns] && data.rows[i][attrColumns][colName]) {
+                            attrs = data.rows[i][attrColumns][colName];
 
-                            for (var attr in attrs) {
-                                $td.attr(attr, attrs[attr]);
+                            for (attr in attrs) {
+                                if (attrs.hasOwnProperty(attr)) {
+                                    $td.attr(attr, attrs[attr]);
+                                }
                             }
                         }
 
-                        if (undefined != data.rows[i][colName]) {
+                        if (undefined !== data.rows[i][colName]) {
                             $td.append(data.rows[i][colName]);
                         }
 
@@ -468,13 +764,13 @@
                     content.push($tr);
                 }
 
-                removeLoadingInfo.apply(self);
+                removeLoadingInfo(self);
                 $body.empty();
                 $body.append(content);
                 self.pageNumber = data.pageNumber;
                 self.pageSize = data.pageSize;
                 self.size = data.size;
-                $.proxy(refreshColumnHeaders, self)(data.sortColumns);
+                refreshColumnHeaders(self, data.sortColumns);
                 self.$table.trigger(event);
                 self.refreshPager();
             },
@@ -483,10 +779,10 @@
                     data:       data,
                     textStatus: textStatus,
                     jqXHR:      jqXHR
-                };
-                var event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
+                },
+                    event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
 
-                removeLoadingInfo.apply(self);
+                removeLoadingInfo(self);
                 self.$table.trigger(event);
                 self.refreshPager();
             }
@@ -496,7 +792,7 @@
     /**
      * Go to start page.
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.startPage = function () {
         this.setPageNumber(1);
@@ -505,7 +801,7 @@
     /**
      * Go to previous page.
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.previousPage = function () {
         this.setPageNumber(this.getPageNumber() - 1);
@@ -514,7 +810,7 @@
     /**
      * Go to next page.
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.nextPage = function () {
         this.setPageNumber(this.getPageNumber() + 1);
@@ -523,7 +819,7 @@
     /**
      * Go to end page.
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.endPage = function () {
         this.setPageNumber(this.getPageCount());
@@ -532,18 +828,18 @@
     /**
      * Get the language configuration.
      *
-     * @param String locale The ISO code of language
+     * @param {string} locale The ISO code of language
      *
-     * @return Array The language configuration
+     * @returns {object} The language configuration
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.langData = function (locale) {
-        if (undefined == locale) {
+        if (undefined === locale) {
             locale = this.options.locale;
         }
 
-        if (undefined == TablePager.LANGUAGES[locale]) {
+        if (undefined === TablePager.LANGUAGES[locale]) {
             locale = 'en';
         }
 
@@ -553,301 +849,37 @@
     /**
      * Destroy instance.
      *
-     * @this
+     * @this TablePager
      */
     TablePager.prototype.destroy = function () {
         this.$table
-            .off('click.st.tablepager', this.options.selectors.sortable, $.proxy(onSortColumnAction, this))
-        ;
+            .off('click.st.tablepager', this.options.selectors.sortable, onSortColumnAction);
+
         this.$element
-            .off('change.st.tablepager', this.options.selectors.sizeList, $.proxy(onPageSizeAction, this))
-            .off('click.st.tablepager', this.options.selectors.startPage, $.proxy(onStartPageAction, this))
-            .off('click.st.tablepager', this.options.selectors.previousPage, $.proxy(onPreviousPageAction, this))
-            .off('change.st.tablepager', this.options.selectors.pageNumber, $.proxy(onPageNumberAction, this))
-            .off('click.st.tablepager', this.options.selectors.nextPage, $.proxy(onNextPageAction, this))
-            .off('click.st.tablepager', this.options.selectors.endPage, $.proxy(onEndPageAction, this))
-            .off('click.st.tablepager', this.options.selectors.refresh, $.proxy(onRefreshAction, this))
-        ;
+            .off('change.st.tablepager', this.options.selectors.sizeList, onPageSizeAction)
+            .off('click.st.tablepager', this.options.selectors.startPage, onStartPageAction)
+            .off('click.st.tablepager', this.options.selectors.previousPage, onPreviousPageAction)
+            .off('change.st.tablepager', this.options.selectors.pageNumber, onPageNumberAction)
+            .off('click.st.tablepager', this.options.selectors.nextPage, onNextPageAction)
+            .off('click.st.tablepager', this.options.selectors.endPage, onEndPageAction)
+            .off('click.st.tablepager', this.options.selectors.refresh, onRefreshAction);
 
         this.$element.$element.removeData('st.tablepager');
     };
-
-    /**
-     * Refresh the size list of pager.
-     *
-     * @this
-     * @private
-     */
-    function refreshSizeList (rebuild) {
-        var $sizeList = $(this.options.selectors.sizeList, this.$element);
-
-        $sizeList.attr('disabled', 'disabled');
-
-        if (rebuild) {
-            $sizeList.empty();
-
-            for (var i = 0; i < this.sizeList.length; i++) {
-                var $opt = $('<option value="' + this.sizeList[i]['value'] + '">' + this.sizeList[i]['label'] + '</option>');
-
-                if (this.sizeList[i]['value'] == this.pageSize) {
-                    $opt.prop('selected', 'selected');
-                }
-
-                $sizeList.append($opt);
-            }
-        }
-
-        if (this.sizeList.length > 1) {
-            $sizeList.removeAttr('disabled');
-        }
-    }
-
-    /**
-     * Refresh the page number of pager.
-     *
-     * @this
-     * @private
-     */
-    function refreshPageNumber () {
-        var $pageNumber = $(this.options.selectors.pageNumber, this.$element);
-        var $pageCount = $('span.table-pager-page-count', this.$element);
-
-        $pageNumber.attr('disabled', 'disabled');
-        $pageNumber.prop('value', this.getPageNumber());
-        $pageCount.text(this.getPageCount());
-
-        if (this.getPageCount() > 1) {
-            $pageNumber.removeAttr('disabled');
-        }
-    }
-
-    /**
-     * Refresh the page buttons.
-     *
-     * @this
-     * @private
-     */
-    function refreshPageButtons () {
-        var $start = $(this.options.selectors.startPage, this.$element);
-        var $previous = $(this.options.selectors.previousPage, this.$element);
-        var $next = $(this.options.selectors.nextPage, this.$element);
-        var $end = $(this.options.selectors.endPage, this.$element);
-        var $refresh = $(this.options.selectors.refresh, this.$element);
-
-        $start.attr('disabled', 'disabled');
-        $previous.attr('disabled', 'disabled');
-        $next.attr('disabled', 'disabled');
-        $end.attr('disabled', 'disabled');
-        $refresh.removeAttr('disabled');
-
-        if (this.pageNumber > 1) {
-            $start.removeAttr('disabled');
-            $previous.removeAttr('disabled');
-        }
-
-        if (this.pageNumber < this.getPageCount()) {
-            $next.removeAttr('disabled');
-            $end.removeAttr('disabled');
-        }
-    }
-
-    /**
-     * Refresh the page elements.
-     *
-     * @this
-     * @private
-     */
-    function refreshPageElements () {
-        var $elements = $('div.table-pager-elements', this.$element);
-
-        $('> span.table-pager-start', $elements).text(this.getStart());
-        $('> span.table-pager-end', $elements).text(this.getEnd());
-        $('> span.table-pager-size', $elements).text(this.getSize());
-    }
-
-    /**
-     * Refresh the column headers.
-     *
-     * @param Array sortDefinitions The sort column definitions
-     *
-     * @this
-     * @private
-     */
-    function refreshColumnHeaders (sortDefinitions) {
-        this.sortOrder = new Array();
-        var $ths = this.$table.find('> thead > tr:last > th[data-table-sort]');
-        $ths.removeAttr('data-table-sort');
-
-        for (var i = 0; i < sortDefinitions.length; i++) {
-            var $th = this.$table.find('> thead >tr:last > th[data-col-name=' + sortDefinitions[i]['name'] + ']');
-
-            $th.attr('data-table-sort', sortDefinitions[i]['sort']);
-            this.sortOrder.push(sortDefinitions[i]['name']);
-        }
-    }
-
-    /**
-     * Get the sort column definitions.
-     *
-     * @this
-     * @private
-     */
-    function getSortColumns () {
-        var sortDef = new Array();
-
-        for (var i = 0; i < this.sortOrder.length; i++) {
-            var $th = this.$table.find('> thead >tr:last > th[data-col-name=' + this.sortOrder[i] + ']');
-
-            if (undefined != $th.attr('data-table-sort')) {
-                sortDef.push({name: this.sortOrder[i], sort: $th.attr('data-table-sort')});
-            }
-        }
-
-        return sortDef;
-    }
-
-    /**
-     * Action on click to refresh button.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onPageSizeAction (event) {
-        this.setPageSize($(event.target).prop('value'));
-    }
-
-    /**
-     * Action on click to start page button.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onStartPageAction (event) {
-        this.startPage();
-    }
-
-    /**
-     * Action on click to previous page button.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onPreviousPageAction (event) {
-        this.previousPage();
-    }
-
-    /**
-     * Action on change page number input.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onPageNumberAction (event) {
-        this.setPageNumber($(event.target).prop('value'));
-    }
-
-    /**
-     * Action on click to next page button.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onNextPageAction (event) {
-        this.nextPage();
-    }
-
-    /**
-     * Action on click to end page button.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onEndPageAction (event) {
-        this.endPage();
-    }
-
-    /**
-     * Action on click to refresh button.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onRefreshAction (event) {
-        this.refresh();
-    }
-
-    /**
-     * Action on click to sortable column header.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onSortColumnAction (event) {
-        var $col = $(event.target);
-        this.sortColumn($col.attr('data-col-name'), event.ctrlKey, $col.attr('data-table-sort'));
-    }
-
-    /**
-     * Creates the loading info hover the table.
-     *
-     * @this
-     * @private
-     */
-    function createLoadingInfo () {
-        var $parent = this.$table.parents('.table-responsive:first');
-        var marginTop = $('> thead', this.$table).outerHeight();
-        var width = $parent.size() > 0 ? $parent.outerWidth() : this.$table.outerWidth();
-        var height = $('> tbody', this.$table).outerHeight() + marginTop;
-
-        this.$loadingInfo = $(this.options.loadingTemplate);
-        this.$loadingInfo.attr('data-table-pager-loading-info', 'true');
-        this.$loadingInfo.css('margin-top', -marginTop);
-        this.$loadingInfo.css('padding-top', height / 3);
-        this.$loadingInfo.css('width', width);
-        this.$loadingInfo.css('height', height);
-        this.$table.prepend(this.$loadingInfo);
-    }
-
-    /**
-     * Removes the loading info hover the table.
-     *
-     * @this
-     * @private
-     */
-    function removeLoadingInfo () {
-        this.$loadingInfo.remove();
-        delete this.$loadingInfo;
-    }
 
 
     // TABLE PAGER PLUGIN DEFINITION
     // =============================
 
-    var old = $.fn.tablePager;
+    old = $.fn.tablePager;
 
-    $.fn.tablePager = function (option, _relatedTarget) {
+    $.fn.tablePager = function (option, value) {
         return this.each(function () {
-            var $this   = $(this);
-            var data    = $this.data('st.tablepager');
-            var options = typeof option == 'object' && option;
+            var $this   = $(this),
+                data    = $this.data('st.tablepager'),
+                options = typeof option === 'object' && option;
 
-            if (!data && option == 'destroy') {
+            if (!data && option === 'destroy') {
                 return;
             }
 
@@ -855,8 +887,8 @@
                 $this.data('st.tablepager', (data = new TablePager(this, options)));
             }
 
-            if (typeof option == 'string') {
-                data[option]();
+            if (typeof option === 'string') {
+                data[option](value);
             }
         });
     };
@@ -884,4 +916,4 @@
         });
     });
 
-}(jQuery);
+}(jQuery));
