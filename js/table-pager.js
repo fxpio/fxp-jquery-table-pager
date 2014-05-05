@@ -871,9 +871,7 @@
     // TABLE PAGER PLUGIN DEFINITION
     // =============================
 
-    old = $.fn.tablePager;
-
-    $.fn.tablePager = function (option, value) {
+    function Plugin(option, value) {
         return this.each(function () {
             var $this   = $(this),
                 data    = $this.data('st.tablepager'),
@@ -891,8 +889,11 @@
                 data[option](value);
             }
         });
-    };
+    }
 
+    old = $.fn.tablePager;
+
+    $.fn.tablePager             = Plugin;
     $.fn.tablePager.Constructor = TablePager;
 
 
@@ -912,7 +913,7 @@
     $(window).on('load', function () {
         $('[data-table-pager="true"]').each(function () {
             var $this = $(this);
-            $this.tablePager($this.data());
+            Plugin.call($this, $this.data());
         });
     });
 
