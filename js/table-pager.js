@@ -463,7 +463,7 @@
             $th,
             i;
 
-        if ('asc' !== direction || 'desc' !== direction) {
+        if ('asc' !== direction && 'desc' !== direction) {
             direction = 'asc';
         }
 
