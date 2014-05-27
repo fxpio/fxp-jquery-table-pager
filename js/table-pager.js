@@ -698,13 +698,23 @@
 
         var self = this,
             event = $.Event('table-pager-refreshing', {'tablePager': this}),
-            data = {};
+            data = {},
+            dataPrefix = '';
 
-        data.ajax_id = this.options.ajaxId;
-        data[this.options.ajaxId + '_ps'] = this.getPageSize();
-        data[this.options.ajaxId + '_pn'] = this.getPageNumber();
-        data[this.options.ajaxId + '_p'] = this.options.parameters;
-        data[this.options.ajaxId + '_sc'] = getSortColumns(this);
+        if (null !== this.options.ajaxId && '' !== this.options.ajaxId) {
+            data.ajax_id = this.options.ajaxId;
+            dataPrefix = data.ajax_id;
+        }
+
+        data[dataPrefix + '_ps'] = this.getPageSize();
+        data[dataPrefix + '_pn'] = this.getPageNumber();
+        data[dataPrefix + '_p'] = this.options.parameters;
+        data[dataPrefix + '_sc'] = getSortColumns(this);
+
+        data.ps = this.getPageSize();
+        data.pn = this.getPageNumber();
+        data.p = this.options.parameters;
+        data.sc = getSortColumns(this);
 
         createLoadingInfo(this);
         this.$table.trigger(event);
