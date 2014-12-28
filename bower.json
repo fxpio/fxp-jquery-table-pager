@@ -1,0 +1,28 @@
+{
+  "name": "sonatra-jquery-table-pager",
+  "version": "1.0.0",
+  "authors": [
+    "François Pluchino <francois.pluchino@sonatra.com>"
+  ],
+  "description": "A jquery ajax pager for table",
+  "main": "js/table-pager.js",
+  "keywords": [
+    "table",
+    "ajax",
+    "pager",
+    "jquery"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/sonatra/sonatra-jquery-table-pager",
+  "dependencies": {
+    "jquery": ">=1.11.0"
+  },
+  "devDependencies": {
+    "bootstrap": ">=3.0"
+  },
+  "ignore": [
+    "examples",
+    "doc",
+    "README.md"
+  ]
+}
