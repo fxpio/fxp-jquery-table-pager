@@ -20,7 +20,8 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
-                    "css/table-pager.css": "less/table-pager.less"
+                    "css/table-pager.css": "less/table-pager.less",
+                    "css/table-sort.css":  "less/table-sort.less"
                 }
             }
         }
