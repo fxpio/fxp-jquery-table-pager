@@ -841,7 +841,7 @@
     /**
      * Get the language configuration.
      *
-     * @param {string} locale The ISO code of language
+     * @param {string} [locale] The ISO code of language
      *
      * @returns {object} The language configuration
      *
