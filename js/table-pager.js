@@ -13,8 +13,6 @@
 
 /**
  * @param {jQuery} $
- *
- * @typedef {TablePager} TablePager
  */
 (function ($) {
     'use strict';
