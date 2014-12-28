@@ -18,7 +18,8 @@
     "jquery": ">=1.11.0"
   },
   "devDependencies": {
-    "bootstrap": ">=3.0"
+    "bootstrap": ">=3.0",
+    "font-awesome": ">=4.2"
   },
   "ignore": [
     "examples",
