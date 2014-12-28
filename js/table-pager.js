@@ -378,6 +378,10 @@
 
         this.setSizeList(this.options.sizeList);
         this.refreshPager(true);
+
+        if (this.options.init) {
+            this.refresh();
+        }
     },
         old;
 
@@ -398,6 +402,7 @@
         parameters:       {},
         multiSortable:    false,
         sortOrder:        [],
+        init:              false,
         loadingTemplate:  '<caption><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         selectors:        {
