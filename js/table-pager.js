@@ -714,11 +714,6 @@
         data[dataPrefix + '_p'] = this.options.parameters;
         data[dataPrefix + '_sc'] = getSortColumns(this);
 
-        data.ps = this.getPageSize();
-        data.pn = this.getPageNumber();
-        data.p = this.options.parameters;
-        data.sc = getSortColumns(this);
-
         createLoadingInfo(this);
         this.$table.trigger(event);
 
