@@ -1,0 +1,36 @@
+//
+// Table Sort Core
+// --------------------------------------------------
+
+.table {
+    > tbody {
+        th {
+            > i.table-sort-icon {
+                display: none;
+                margin-left: 3px;
+                vertical-align: middle;
+                color: @table-sort-icon-color;
+            }
+
+            &[data-table-sort=asc] {
+                > i.table-sort-icon {
+                    display: inline-block;
+
+                    &:before {
+                        content: @table-sort-icon-asc;
+                    }
+                }
+            }
+
+            &[data-table-sort=desc] {
+                > i.table-sort-icon {
+                    display: inline-block;
+
+                    &:before {
+                        content: @table-sort-icon-desc;
+                    }
+                }
+            }
+        }
+    }
+}
