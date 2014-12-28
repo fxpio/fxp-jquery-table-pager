@@ -22,8 +22,8 @@
     /**
      * Refresh the size list of pager.
      *
-     * @param {TablePager} self    The table pager instance
-     * @param {boolean}    rebuild Rebuild the pager or not
+     * @param {TablePager} self      The table pager instance
+     * @param {boolean}    [rebuild] Rebuild the pager or not
      *
      * @private
      */
@@ -669,7 +669,7 @@
     /**
      * Refresh pager.
      *
-     * @param {boolean} rebuild
+     * @param {boolean} [rebuild]
      *
      * @this TablePager
      */
