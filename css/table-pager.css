@@ -1,0 +1,81 @@
+.table-pager {
+  padding: 0 4px !important;
+  min-height: 35px;
+  white-space: inherit !important;
+}
+.table-pager > .table-pager-group {
+  display: inline-block;
+}
+.table-pager > .table-pager-group > .btn-group {
+  margin: 4px 5px 4px 0;
+  white-space: nowrap;
+}
+.table-pager .table-pager-size-list {
+  padding: 0 2px;
+  text-align: left;
+  height: 27px;
+  min-width: 60px;
+}
+.table-pager .table-pager-size-list:focus {
+  background-color: #ffffff;
+}
+.table-pager .table-pager-page-number {
+  display: inline-block;
+  padding-left: 6px;
+  padding-right: 6px;
+  height: 27px;
+  width: 41px;
+  text-align: right;
+}
+.table-pager .table-pager-split,
+.table-pager .table-pager-page-count {
+  display: inline-block;
+  line-height: 27px;
+}
+.table-pager .table-pager-split {
+  margin: 0 5px;
+}
+.table-pager .table-pager-elements {
+  padding-top: 4px;
+  padding-bottom: 3px;
+}
+.table-pager .table-pager-elements .table-pager-split {
+  line-height: inherit;
+}
+.table-pager + .table,
+.table-pager + .table-responsive > .table {
+  border-top: 1px solid #dddddd;
+}
+caption[data-table-pager-loading-info=true] {
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  font-size: 32px;
+  background: rgba(255, 255, 255, 0.7);
+  color: #0071ce;
+}
+caption[data-table-pager-loading-info=true] > i:before {
+  content: "\f013";
+}
+.table > thead th[data-table-pager-sortable=true]:not([data-table-sort]) > i.table-sort-icon:before {
+  content: "\f0dc";
+}
+.table > thead th[data-table-pager-sortable=true]:hover {
+  cursor: pointer;
+  color: #028dff;
+}
+.table > thead th[data-table-pager-sortable=true] > i.table-sort-icon {
+  display: inline-block;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon {
+  color: #00b092;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon {
+  color: #00b092;
+}
+@media screen and (max-width: 480px) {
+  .table-pager > .table-pager-group {
+    display: block;
+    text-align: center;
+  }
+}
