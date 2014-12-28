@@ -60,10 +60,11 @@ class AjaxDemo
         for ($i = $start+1; $i <= $end; $i++) {
             $rows[] = array(
                 '_row_number' => $i,
-                'id' => (string) $i,
-                'firstname' => 'First name '.$i,
-                'lastname'  => 'Last name '.$i,
-                'username'  => 'Username '.$i,
+                '_row_id'     => $i,
+                'id'          => (string) $i,
+                'firstname'   => 'First name '.$i,
+                'lastname'    => 'Last name '.$i,
+                'username'    => 'Username '.$i,
             );
         }
 
