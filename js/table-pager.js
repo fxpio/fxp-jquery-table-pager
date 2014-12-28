@@ -738,7 +738,6 @@
                         textStatus: textStatus,
                         jqXHR:      jqXHR
                     },
-                    event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret}),
                     $tr,
                     colName,
                     $td,
@@ -746,6 +745,7 @@
                     attr,
                     i,
                     j;
+                event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
 
                 for (i = 0; i < data.rows.length; i += 1) {
                     $tr = $('<tr></tr>');
@@ -794,8 +794,8 @@
                     data:       data,
                     textStatus: textStatus,
                     jqXHR:      jqXHR
-                },
-                    event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
+                };
+                event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
 
                 removeLoadingInfo(self);
                 self.$table.trigger(event);
@@ -897,7 +897,8 @@
             }
 
             if (!data) {
-                $this.data('st.tablepager', (data = new TablePager(this, options)));
+                data = new TablePager(this, options);
+                $this.data('st.tablepager', data);
             }
 
             if (typeof option === 'string') {
