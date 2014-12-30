@@ -20,7 +20,7 @@ Add library in your `bower.json`:
 ```json
 {
     "dependencies": {
-        "sonatra-jquery-table-pager: "latest"
+        "sonatra-jquery-table-pager": "latest"
     }
 }
 ```
