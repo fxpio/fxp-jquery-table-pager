@@ -706,13 +706,13 @@
 
         if (null !== this.options.ajaxId && '' !== this.options.ajaxId) {
             data.ajax_id = this.options.ajaxId;
-            dataPrefix = data.ajax_id;
+            dataPrefix = data.ajax_id + '_';
         }
 
-        data[dataPrefix + '_ps'] = this.getPageSize();
-        data[dataPrefix + '_pn'] = this.getPageNumber();
-        data[dataPrefix + '_p'] = this.options.parameters;
-        data[dataPrefix + '_sc'] = getSortColumns(this);
+        data[dataPrefix + 'ps'] = this.getPageSize();
+        data[dataPrefix + 'pn'] = this.getPageNumber();
+        data[dataPrefix + 'p'] = this.options.parameters;
+        data[dataPrefix + 'sc'] = getSortColumns(this);
 
         createLoadingInfo(this);
         this.$table.trigger(event);
