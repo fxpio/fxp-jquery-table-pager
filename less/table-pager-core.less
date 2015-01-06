@@ -3,8 +3,6 @@
 // --------------------------------------------------
 
 .table-pager {
-    @actionHeight: 27px;
-
     padding: 0 4px !important;
     min-height: 35px;
     white-space: inherit !important;
@@ -21,7 +19,6 @@
     .table-pager-size-list {
         padding: 0 2px;
         text-align: left;
-        height: @actionHeight;
         min-width: 60px;
 
         &:focus {
@@ -33,7 +30,6 @@
         display: inline-block;
         padding-left: 6px;
         padding-right: 6px;
-        height: @actionHeight;
         width: 41px;
         text-align: right;
     }
@@ -41,20 +37,10 @@
     .table-pager-split,
     .table-pager-page-count {
         display: inline-block;
-        line-height: @actionHeight;
     }
 
     .table-pager-split {
         margin: 0 5px;
-    }
-
-    .table-pager-elements {
-        padding-top: 4px;
-        padding-bottom: 3px;
-
-        .table-pager-split {
-            line-height: inherit;
-        }
     }
 
     + .table,

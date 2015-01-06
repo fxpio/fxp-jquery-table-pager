@@ -13,7 +13,6 @@
 .table-pager .table-pager-size-list {
   padding: 0 2px;
   text-align: left;
-  height: 27px;
   min-width: 60px;
 }
 .table-pager .table-pager-size-list:focus {
@@ -23,24 +22,15 @@
   display: inline-block;
   padding-left: 6px;
   padding-right: 6px;
-  height: 27px;
   width: 41px;
   text-align: right;
 }
 .table-pager .table-pager-split,
 .table-pager .table-pager-page-count {
   display: inline-block;
-  line-height: 27px;
 }
 .table-pager .table-pager-split {
   margin: 0 5px;
-}
-.table-pager .table-pager-elements {
-  padding-top: 4px;
-  padding-bottom: 3px;
-}
-.table-pager .table-pager-elements .table-pager-split {
-  line-height: inherit;
 }
 .table-pager + .table,
 .table-pager + .table-responsive > .table {
