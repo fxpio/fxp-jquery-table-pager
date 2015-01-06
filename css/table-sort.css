@@ -1,3 +1,25 @@
+.table > thead th[data-table-pager-sortable=true]:not([data-table-sort]) > i.table-sort-icon:before {
+  content: "\f0dc";
+}
+.table > thead th[data-table-pager-sortable=true]:hover {
+  cursor: pointer;
+  color: #028dff;
+}
+.table > thead th[data-table-pager-sortable=true] > i.table-sort-icon {
+  display: inline-block;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon {
+  color: #00b092;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon:before {
+  content: "\f0dd";
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon {
+  color: #00b092;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon:before {
+  content: "\f0de";
+}
 .table > tbody th > i.table-sort-icon {
   display: none;
   margin-left: 3px;

@@ -57,22 +57,6 @@ caption[data-table-pager-loading-info=true] {
 caption[data-table-pager-loading-info=true] > i:before {
   content: "\f013";
 }
-.table > thead th[data-table-pager-sortable=true]:not([data-table-sort]) > i.table-sort-icon:before {
-  content: "\f0dc";
-}
-.table > thead th[data-table-pager-sortable=true]:hover {
-  cursor: pointer;
-  color: #028dff;
-}
-.table > thead th[data-table-pager-sortable=true] > i.table-sort-icon {
-  display: inline-block;
-}
-.table > thead th[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon {
-  color: #00b092;
-}
-.table > thead th[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon {
-  color: #00b092;
-}
 @media screen and (max-width: 480px) {
   .table-pager > .table-pager-group {
     display: block;
