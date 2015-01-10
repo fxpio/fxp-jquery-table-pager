@@ -7,6 +7,7 @@
 }
 .table > thead th[data-table-pager-sortable=true] > i.table-sort-icon {
   display: inline-block;
+  margin-left: 4px;
 }
 .table > thead th[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon {
   color: #00b092;
