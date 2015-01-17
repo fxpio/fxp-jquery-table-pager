@@ -22,8 +22,8 @@ class AjaxDemo
     public function run()
     {
         $max = 15;
-        $pn = isset($_GET['_pn']) ? (int) $_GET['_pn'] : 1;
-        $ps = isset($_GET['_ps']) ? (int) $_GET['_ps'] : 5;
+        $pn = isset($_GET['pn']) ? (int) $_GET['pn'] : 1;
+        $ps = isset($_GET['ps']) ? (int) $_GET['ps'] : 5;
         $rows = $this->getRows($pn, $ps, $max);
 
         $this->write(array(
