@@ -339,7 +339,7 @@
      */
     var TablePager = function (element, options) {
         this.guid          = jQuery.guid;
-        this.options       = $.extend({}, TablePager.DEFAULTS, options);
+        this.options       = $.extend(true, {}, TablePager.DEFAULTS, options);
         this.$element      = $(element);
         this.$table        = $('#' + this.$element.attr('data-table-id'));
         this.sizeList      = [];

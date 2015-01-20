@@ -18,7 +18,7 @@
     // TABLE PAGER CLASS DEFINITION
     // ============================
 
-    $.fn.tablePager.Constructor.LANGUAGES = $.extend({}, $.fn.tablePager.Constructor.LANGUAGES, {
+    $.fn.tablePager.Constructor.LANGUAGES = $.extend(true, {}, $.fn.tablePager.Constructor.LANGUAGES, {
         fr: {
             all: 'Tout'
         }
