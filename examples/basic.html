@@ -77,9 +77,19 @@
         </table>
     </div>
 </div>
-
-<script src="../bower_components/jquery/dist/jquery.js"></script>
-<script src="../js/table-pager.js"></script>
-<script src="../js/locale/table-pager-fr.js"></script>
+<script>
+    var require = {
+        paths: {
+            'jquery': '../bower_components/jquery/dist/jquery',
+            'sonatra-jquery-table-pager': '../js/table-pager',
+            'sonatra-jquery-table-pager-locale': '../js/locale'
+        },
+        deps: ['sonatra-jquery-table-pager', 'sonatra-jquery-table-pager-locale/table-pager-fr'],
+        callback: function () {
+            $(window).trigger('load');
+        }
+    };
+</script>
+<script src="../bower_components/requirejs/require.js" async="async"></script>
 </body>
 </html>
