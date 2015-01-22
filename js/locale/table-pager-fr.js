@@ -7,12 +7,25 @@
  * file that was distributed with this source code.
  */
 
+/*global define*/
 /*global jQuery*/
 
 /**
  * @param {jQuery} $
+ *
+ * @typedef {object} define.amd
  */
-(function ($) {
+(function (factory) {
+    'use strict';
+
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery', 'sonatra-jquery-table-pager'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
     'use strict';
 
     // TABLE PAGER CLASS DEFINITION
@@ -24,4 +37,4 @@
         }
     });
 
-}(jQuery));
+}));
