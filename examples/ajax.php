@@ -57,6 +57,11 @@ class AjaxDemo
         $start = ($pn - 1) * $ps;
         $end = min($start + $ps, $max);
 
+        if (0 === $ps) {
+            $start = 0;
+            $end = $max;
+        }
+
         for ($i = $start+1; $i <= $end; $i++) {
             $rows[] = array(
                 '_row_number' => $i,
