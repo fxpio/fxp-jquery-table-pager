@@ -30,3 +30,30 @@ Launch bower:
 ```bash
 $ bower install
 ```
+
+Dev installation
+----------------
+
+### Use NPM
+
+```
+npm install
+```
+
+### Use Bower
+
+```
+bower install
+```
+
+### Use grunt
+
+```
+grunt serve
+```
+
+For ajax example, you must run this command in parallel:
+
+```
+grunt nodemon
+```
