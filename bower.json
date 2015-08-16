@@ -15,12 +15,12 @@
   "license": "MIT",
   "homepage": "https://github.com/sonatra/sonatra-jquery-table-pager",
   "dependencies": {
-    "jquery": ">=1.11.0"
+    "jquery": "^2.1.0"
   },
   "devDependencies": {
     "requirejs": "~2",
-    "bootstrap": ">=3.0",
-    "font-awesome": ">=4.2"
+    "bootstrap": "3.*",
+    "font-awesome": "4.*"
   },
   "ignore": [
     "examples",
