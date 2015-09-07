@@ -199,7 +199,6 @@
         self.$loadingInfo = $(self.options.loadingTemplate);
         self.$loadingInfo.attr('data-table-pager-loading-info', 'true');
         self.$loadingInfo.css('margin-top', -marginTop);
-        self.$loadingInfo.css('padding-top', height / 3);
         self.$loadingInfo.css('width', width);
         self.$loadingInfo.css('height', height);
         self.$table.prepend(self.$loadingInfo);
@@ -414,7 +413,7 @@
         multiSortable:    false,
         sortOrder:        [],
         init:              false,
-        loadingTemplate:  '<caption><i class="fa fa-spin"></i></caption>',
+        loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         selectors:        {
             sizeList:     'select.table-pager-size-list',

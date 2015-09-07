@@ -46,10 +46,16 @@
     + .table,
     + .table-responsive > .table {
         border-top: 1px solid @table-border-color;
+
+        tbody {
+            > tr:empty {
+                height: 70px;
+            }
+        }
     }
 }
 
-caption[data-table-pager-loading-info=true] {
+caption[data-table-pager-loading-info=true].default-loading-icon {
     position: absolute;
     z-index: 1;
     text-align: center;
