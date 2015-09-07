@@ -55,16 +55,19 @@
     }
 }
 
-caption[data-table-pager-loading-info=true].default-loading-icon {
+caption[data-table-pager-loading-info=true] {
     position: absolute;
     z-index: 1;
     text-align: center;
-    font-size: @table-pager-loading-size;
     background: @table-pager-loading-bg;
-    color: @table-pager-loading-color;
 
-    > i:before {
-        content: @table-pager-loading-icon;
+    &.default-loading-icon {
+        font-size: @table-pager-loading-size;
+        color: @table-pager-loading-color;
+
+        > i:before {
+            content: @table-pager-loading-icon;
+        }
     }
 }
 
