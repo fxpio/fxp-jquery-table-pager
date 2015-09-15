@@ -882,9 +882,8 @@
             .off('change.st.tablepager', this.options.selectors.pageNumber, onPageNumberAction)
             .off('click.st.tablepager', this.options.selectors.nextPage, onNextPageAction)
             .off('click.st.tablepager', this.options.selectors.endPage, onEndPageAction)
-            .off('click.st.tablepager', this.options.selectors.refresh, onRefreshAction);
-
-        this.$element.$element.removeData('st.tablepager');
+            .off('click.st.tablepager', this.options.selectors.refresh, onRefreshAction)
+            .removeData('st.tablepager');
     };
 
 
