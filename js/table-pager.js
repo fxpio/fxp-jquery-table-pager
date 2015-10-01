@@ -156,6 +156,8 @@
             $th.attr('data-table-sort', sortDefinitions[i].sort);
             self.sortOrder.push(sortDefinitions[i].name);
         }
+
+        self.$element.attr('data-sort-order', JSON.stringify(self.sortOrder));
     }
 
     /**
@@ -362,6 +364,8 @@
         this.sortOrder     = this.options.sortOrder;
         this.setMultiSortable(this.options.multiSortable);
 
+        this.$element.attr('data-size', this.size);
+
         this.$table
             .on('click.st.tablepager', this.options.selectors.sortable, this, onSortColumnAction);
 
@@ -447,6 +451,7 @@
      */
     TablePager.prototype.setMultiSortable = function (sortable) {
         this.multiSortable = sortable;
+        this.$element.attr('data-multi-sortable', sortable ? 'true' : 'false');
     };
 
     /**
@@ -530,6 +535,7 @@
         }
 
         this.sizeList = sizesList;
+        this.$element.attr('data-size-list', JSON.stringify(sizesList));
     };
 
     /**
@@ -553,6 +559,8 @@
     TablePager.prototype.setPageSize = function (size) {
         this.pageSize = parseInt(size, 10);
         this.pageNumber = 1;
+        this.$element.attr('data-page-size', this.pageSize);
+        this.$element.attr('data-page-number', this.pageNumber);
         this.refresh();
     };
 
@@ -599,6 +607,7 @@
     TablePager.prototype.setPageNumber = function (page) {
         this.pageNumber = Math.min(page, this.getPageCount());
         this.pageNumber = Math.max(this.pageNumber, 1);
+        this.$element.attr('data-page-number', this.pageNumber);
         this.refresh();
     };
 
