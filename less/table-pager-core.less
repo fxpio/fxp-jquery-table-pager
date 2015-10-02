@@ -72,11 +72,26 @@ caption[data-table-pager-loading-info=true] {
     }
 }
 
-@media screen and (max-width: @screen-xs-min) {
+@media (max-width: @screen-xs-max) {
     .table-pager {
-        > .table-pager-group {
-            display: block;
-            text-align: center;
+        .table-pager-group.group1 {
+            text-align: left;
+            display: table;
+            width: 100%;
+
+            .btn-group {
+                display: table-cell;
+                padding: 4px 5px 4px 0;
+
+                &:last-child {
+                    padding-right: 0;
+                }
+            }
+        }
+
+        .btn {
+            padding-left: 12px;
+            padding-right: 12px;
         }
     }
 }
