@@ -340,6 +340,34 @@
         self.sortColumn($col.attr('data-col-name'), multiple, direction);
     }
 
+    /**
+     * Action on scroll of target.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function onAffixScrollAction(event) {
+        var self = event.data,
+            affixClass = self.options.affixClass,
+            isOver = self.$table.height() >= (self.$affixTarget.height() * self.options.affixMinHeight),
+            offsetBottom = self.$table.offset().top + self.$table.outerHeight() - self.$affixTarget.offset().top - self.$element.outerHeight();
+
+        if (isOver && self.$affixTarget.scrollTop() > self.offsetTop && offsetBottom >= 0) {
+            if (!self.$element.hasClass(affixClass)) {
+                self.$mock.css('height', self.$element.outerHeight(true));
+                self.$element.addClass(affixClass);
+                self.$element.before(self.$mock);
+            }
+        } else if (self.$element.hasClass(affixClass)) {
+            self.$element.removeClass(affixClass);
+            self.$mock.detach();
+            self.$mock.css('height', '');
+        }
+    }
+
     // TABLE PAGER CLASS DEFINITION
     // ============================
 
@@ -363,6 +391,13 @@
         this.rows          = [];
         this.sortOrder     = this.options.sortOrder;
         this.setMultiSortable(this.options.multiSortable);
+        this.$affixTarget  = this.options.affixTarget !== false ? $(this.options.affixTarget) : null;
+        this.$mock         = null !== this.$affixTarget ? $('<div class="table-pager-mock"></div>') : null;
+        this.offsetTop     = null !== this.$affixTarget ? this.$element.offset().top - this.$affixTarget.offset().top : 0;
+
+        if (null !== this.$affixTarget) {
+            this.$affixTarget.on('scroll.st.tablepager', null, this, onAffixScrollAction);
+        }
 
         this.$element.attr('data-size', this.size);
 
@@ -416,7 +451,10 @@
         parameters:       {},
         multiSortable:    false,
         sortOrder:        [],
-        init:              false,
+        init:             false,
+        affixTarget:      window,
+        affixMinHeight:   0.5,
+        affixClass:       'affix',
         loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         selectors:        {
@@ -883,6 +921,14 @@
     TablePager.prototype.destroy = function () {
         this.$table
             .off('click.st.tablepager', this.options.selectors.sortable, onSortColumnAction);
+
+        if (null !== this.$affixTarget) {
+            this.$affixTarget.off('scroll.st.tablepager', null, onAffixScrollAction);
+        }
+
+        if (null !== this.$mock) {
+            this.$mock.remove();
+        }
 
         this.$element
             .off('change.st.tablepager', this.options.selectors.sizeList, onPageSizeAction)
