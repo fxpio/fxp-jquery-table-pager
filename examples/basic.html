@@ -19,42 +19,44 @@
 <div>
     <div data-table-pager="true" data-locale="fr" data-add-all-in-size="true" data-page-size="5" data-page-number="1" data-size="15"
          data-url="http://localhost:9001/ajax.json" data-table-id="table-example" class="table-pager" data-init="true">
-        <div class="table-pager-group group1">
-            <div class="btn-group">
-                <select disabled="disabled" class="table-pager-size-list btn btn-default form-control">
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div class="btn-group">
-                <button type="button" disabled="disabled"
-                        class="table-pager-start-page btn btn-default fa fa-step-backward"></button>
-                <button type="button" disabled="disabled"
-                        class="table-pager-previous-page btn btn-default fa fa-angle-double-left"></button>
-            </div>
-            <div class="btn-group">
-                <input type="text" disabled="disabled" class="table-pager-page-number form-control" value="1"/>
-                <span class="table-pager-split">/</span>
-                <span class="table-pager-page-count">3</span>
-            </div>
-            <div class="btn-group">
-                <button type="button" disabled="disabled"
-                        class="table-pager-next-page btn btn-default fa fa-angle-double-right"></button>
-                <button type="button" disabled="disabled"
-                        class="table-pager-end-page btn btn-default fa fa-step-forward"></button>
-            </div>
-        </div>
-        <div class="table-pager-group group2">
-            <div class="btn-group">
-                <button type="button" disabled="disabled"
-                        class="table-pager-refresh btn btn-default fa fa-refresh"></button>
-            </div>
-            <div class="btn-group">
-                <div class="btn btn-default disabled table-pager-elements">
-                    <span class="table-pager-start">1</span>
-                    <span class="table-pager-split-to">-</span>
-                    <span class="table-pager-end">5</span>
+        <div class="table-pager-container">
+            <div class="table-pager-group group1">
+                <div class="btn-group">
+                    <select disabled="disabled" class="table-pager-size-list btn btn-default form-control">
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="button" disabled="disabled"
+                            class="table-pager-start-page btn btn-default fa fa-step-backward"></button>
+                    <button type="button" disabled="disabled"
+                            class="table-pager-previous-page btn btn-default fa fa-angle-double-left"></button>
+                </div>
+                <div class="btn-group">
+                    <input type="text" disabled="disabled" class="table-pager-page-number form-control" value="1"/>
                     <span class="table-pager-split">/</span>
-                    <span class="table-pager-size">15</span>
+                    <span class="table-pager-page-count">3</span>
+                </div>
+                <div class="btn-group">
+                    <button type="button" disabled="disabled"
+                            class="table-pager-next-page btn btn-default fa fa-angle-double-right"></button>
+                    <button type="button" disabled="disabled"
+                            class="table-pager-end-page btn btn-default fa fa-step-forward"></button>
+                </div>
+            </div>
+            <div class="table-pager-group group2">
+                <div class="btn-group">
+                    <button type="button" disabled="disabled"
+                            class="table-pager-refresh btn btn-default fa fa-refresh"></button>
+                </div>
+                <div class="btn-group">
+                    <div class="btn btn-default disabled table-pager-elements">
+                        <span class="table-pager-start">1</span>
+                        <span class="table-pager-split-to">-</span>
+                        <span class="table-pager-end">5</span>
+                        <span class="table-pager-split">/</span>
+                        <span class="table-pager-size">15</span>
+                    </div>
                 </div>
             </div>
         </div>
