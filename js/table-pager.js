@@ -355,6 +355,15 @@
             isOver = self.$table.height() >= (self.$affixTarget.height() * self.options.affixMinHeight),
             offsetBottom = self.$table.offset().top + self.$table.outerHeight() - self.$affixTarget.offset().top - self.$element.outerHeight();
 
+        if (!self.$element.is(':visible')) {
+            isOver = false;
+        }
+
+        // first init offset top only if element is visible
+        if (isOver && null === self.offsetTop) {
+            self.offsetTop = self.$affixTarget.scrollTop() + self.$element.offset().top - self.$affixTarget.offset().top;
+        }
+
         if (isOver && self.$affixTarget.scrollTop() > self.offsetTop && offsetBottom >= 0) {
             if (!self.$element.hasClass(affixClass)) {
                 self.$mock.css('height', self.$element.outerHeight(true));
@@ -393,7 +402,7 @@
         this.setMultiSortable(this.options.multiSortable);
         this.$affixTarget  = this.options.affixTarget !== false ? $(this.options.affixTarget) : null;
         this.$mock         = null !== this.$affixTarget ? $('<div class="table-pager-mock"></div>') : null;
-        this.offsetTop     = null !== this.$affixTarget ? this.$element.offset().top - this.$affixTarget.offset().top : 0;
+        this.offsetTop     = null;
 
         if (null !== this.$affixTarget) {
             this.$affixTarget.on('scroll.st.tablepager', null, this, onAffixScrollAction);
