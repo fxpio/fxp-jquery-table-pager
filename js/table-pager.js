@@ -366,6 +366,7 @@
 
         if (isOver && self.$affixTarget.scrollTop() > self.offsetTop && offsetBottom >= 0) {
             if (!self.$element.hasClass(affixClass)) {
+                $('body').addClass(self.options.affixBodyClass);
                 self.$mock.css('height', self.$element.outerHeight(true));
                 self.$element.addClass(affixClass);
                 self.$element.before(self.$mock);
@@ -374,6 +375,7 @@
             self.$element.removeClass(affixClass);
             self.$mock.detach();
             self.$mock.css('height', '');
+            $('body').removeClass(self.options.affixBodyClass);
         }
     }
 
@@ -464,6 +466,7 @@
         affixTarget:      window,
         affixMinHeight:   0.5,
         affixClass:       'affix',
+        affixBodyClass:   'table-pager-affixed',
         loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         selectors:        {
