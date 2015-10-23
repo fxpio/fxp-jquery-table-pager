@@ -394,7 +394,7 @@
         this.guid          = jQuery.guid;
         this.options       = $.extend(true, {}, TablePager.DEFAULTS, options);
         this.$element      = $(element);
-        this.$table        = $('#' + this.$element.attr('data-table-id'));
+        this.$table        = $('#' + this.options.tableId);
         this.sizeList      = [];
         this.pageSize      = this.options.pageSize;
         this.pageNumber    = this.options.pageNumber;
@@ -452,6 +452,7 @@
      */
     TablePager.DEFAULTS = {
         locale:           'en',
+        tableId:          null,
         pageSize:         100,
         pageNumber:       1,
         addAllInSize:     false,
