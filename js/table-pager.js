@@ -333,6 +333,20 @@
     }
 
     /**
+     * Get the position relative to the affix target.
+     *
+     * @param {jQuery} $affixTarget The affix target
+     * @param {jQuery} $element     The element
+     *
+     * @typedef {TablePager} Event.data The table pager instance
+     *
+     * @private
+     */
+    function getPositionTop($affixTarget, $element) {
+        return $affixTarget.scrollTop() + $element.offset().top - $affixTarget.offset().top;
+    }
+
+    /**
      * Action on scroll of target.
      *
      * @param {jQuery.Event|Event} event
@@ -357,7 +371,7 @@
 
         // first init offset top only if element is visible
         if (isOver && null === self.offsetTop) {
-            self.offsetTop = self.$affixTarget.scrollTop() + self.$element.offset().top - self.$affixTarget.offset().top;
+            self.offsetTop = getPositionTop(self.$affixTarget, self.$element);
         }
 
         if (isOver && self.$affixTarget.scrollTop() > self.offsetTop && offsetBottom >= 0) {
@@ -468,6 +482,7 @@
         affixMinHeight:   0.5,
         affixClass:       'affix',
         affixBodyClass:   'table-pager-affixed',
+        affixScrollSpeed: 300,
         loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         selectors:        {
@@ -788,6 +803,11 @@
 
         createLoadingInfo(this);
         this.$table.trigger(event);
+
+        // scroll to the top of table
+        if (null !== this.$affixTarget && self.$element.hasClass(self.options.affixClass)) {
+            this.$affixTarget.animate({scrollTop: getPositionTop(self.$affixTarget, self.$mock) + 1}, this.options.affixScrollSpeed);
+        }
 
         $.ajax(this.options.url, {
             type: this.options.method,
