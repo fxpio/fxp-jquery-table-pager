@@ -193,17 +193,9 @@
      * @private
      */
     function createLoadingInfo(self) {
-        var $parent = self.$table.parents('.table-responsive:first'),
-            marginTop = $('> thead', self.$table).outerHeight(),
-            width = $parent.size() > 0 ? $parent.outerWidth() : self.$table.outerWidth(),
-            height = $('> tbody', self.$table).outerHeight() + marginTop;
-
         self.$loadingInfo = $(self.options.loadingTemplate);
         self.$loadingInfo.attr('data-table-pager-loading-info', 'true');
-        self.$loadingInfo.css('margin-top', -marginTop);
-        self.$loadingInfo.css('width', width);
-        self.$loadingInfo.css('height', height);
-        self.$table.prepend(self.$loadingInfo);
+        self.$table.append(self.$loadingInfo);
     }
 
     /**
