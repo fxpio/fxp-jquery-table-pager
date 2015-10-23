@@ -347,6 +347,10 @@
             isOver = self.$table.height() >= (self.$affixTarget.height() * self.options.affixMinHeight),
             offsetBottom = self.$table.offset().top + self.$table.outerHeight() - self.$affixTarget.offset().top - self.$element.outerHeight();
 
+        if (undefined !== self.affixDelay) {
+            window.clearTimeout(self.affixDelay);
+        }
+
         if (!self.$element.is(':visible')) {
             isOver = false;
         }
@@ -358,10 +362,14 @@
 
         if (isOver && self.$affixTarget.scrollTop() > self.offsetTop && offsetBottom >= 0) {
             if (!self.$element.hasClass(affixClass)) {
-                $('body').addClass(self.options.affixBodyClass);
-                self.$mock.css('height', self.$element.outerHeight(true));
-                self.$element.addClass(affixClass);
-                self.$element.before(self.$mock);
+                self.affixDelay = window.setTimeout(function () {
+                    $('body').addClass(self.options.affixBodyClass);
+                    self.$mock.css('height', self.$element.outerHeight(true));
+                    self.$element.addClass(affixClass);
+                    self.$element.before(self.$mock);
+
+                    delete self.affixDelay;
+                }, 50);
             }
         } else if (self.$element.hasClass(affixClass)) {
             self.$element.removeClass(affixClass);
