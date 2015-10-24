@@ -401,7 +401,9 @@
     function onAffixScrollAction(event) {
         var self = event.data,
             affixClass = self.options.affixClass,
-            isOver = self.$table.height() >= (self.$affixTarget.height() * self.options.affixMinHeight),
+            affixMinHeight = self.options.affixMinHeight,
+            minHeight = affixMinHeight > 0 && affixMinHeight <= 1 ? (self.$affixTarget.height() * affixMinHeight) : affixMinHeight,
+            isOver = self.$table.height() >= minHeight,
             offsetBottom = self.$table.offset().top + self.$table.outerHeight() - self.$affixTarget.offset().top - self.$element.outerHeight();
 
         if (undefined !== self.affixDelay) {
@@ -535,7 +537,7 @@
         sortOrder:        [],
         init:             false,
         affixTarget:      window,
-        affixMinHeight:   0.5,
+        affixMinHeight:   300,
         affixClass:       'affix',
         affixBodyClass:   'table-pager-affixed',
         affixScrollSpeed: 300,
