@@ -144,7 +144,7 @@
     function refreshColumnHeaders(self, sortDefinitions) {
         self.sortOrder = [];
 
-        var $ths = self.$table.find('> thead > tr:last > th[data-table-sort]'),
+        var $ths = self.$table.find(self.options.selectors.sortable + '[data-table-sort]'),
             $th,
             i;
 
@@ -173,7 +173,7 @@
             i;
 
         for (i = 0; i < self.sortOrder.length; i += 1) {
-            $th = self.$table.find('> thead >tr:last > th[data-col-name=' + self.sortOrder[i] + ']');
+            $th = self.$table.find(self.options.selectors.sortable + '[data-col-name=' + self.sortOrder[i] + ']');
 
             if (undefined !== $th.attr('data-table-sort')) {
                 sortDef.push({name: self.sortOrder[i], sort: $th.attr('data-table-sort')});
