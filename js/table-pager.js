@@ -15,7 +15,8 @@
 /**
  * @param {jQuery} $
  *
- * @typedef {object} define.amd
+ * @typedef {object}           define.amd
+ * @typedef {jQuery|undefined} TablePager.$loadingInfo
  */
 (function (factory) {
     'use strict';
