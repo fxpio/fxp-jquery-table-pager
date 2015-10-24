@@ -3,51 +3,50 @@
 // --------------------------------------------------
 
 
-.table {
-    > thead {
-        th {
-            &[data-table-pager-sortable=true] {
-                &:not([data-table-sort]) {
-                    > i.table-sort-icon {
-                        &:before {
-                            content: @table-sort-icon;
-                        }
-                    }
+.table > thead th,
+.table-pager-list-sort-menu > li a {
+    &[data-table-pager-sortable=true] {
+        &:not([data-table-sort]) {
+            > i.table-sort-icon {
+                &:before {
+                    content: @table-sort-icon;
                 }
+            }
+        }
 
-                &:hover {
-                    cursor: pointer;
-                    color: @table-pager-sort-header-hover-color;
+        &:hover {
+            cursor: pointer;
+            color: @table-pager-sort-header-hover-color;
+        }
+
+        > i.table-sort-icon {
+            display: inline-block;
+            margin-left: @table-pager-sort-icon-margin;
+        }
+
+        &[data-table-sort=asc] {
+            > i.table-sort-icon {
+                color: @table-pager-sort-icon-sorting-color;
+
+                &:before {
+                    content: @table-sort-icon-asc;
                 }
+            }
+        }
 
-                > i.table-sort-icon {
-                    display: inline-block;
-                    margin-left: @table-pager-sort-icon-margin;
-                }
+        &[data-table-sort=desc] {
+            > i.table-sort-icon {
+                color: @table-pager-sort-icon-sorting-color;
 
-                &[data-table-sort=asc] {
-                    > i.table-sort-icon {
-                        color: @table-pager-sort-icon-sorting-color;
-
-                        &:before {
-                            content: @table-sort-icon-asc;
-                        }
-                    }
-                }
-
-                &[data-table-sort=desc] {
-                    > i.table-sort-icon {
-                        color: @table-pager-sort-icon-sorting-color;
-
-                        &:before {
-                            content: @table-sort-icon-desc;
-                        }
-                    }
+                &:before {
+                    content: @table-sort-icon-desc;
                 }
             }
         }
     }
+}
 
+.table {
     > tbody {
         th {
             > i.table-sort-icon {

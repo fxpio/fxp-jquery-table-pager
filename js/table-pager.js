@@ -98,12 +98,14 @@
             $previous = $(self.options.selectors.previousPage, self.$element),
             $next = $(self.options.selectors.nextPage, self.$element),
             $end = $(self.options.selectors.endPage, self.$element),
+            $listSort = $(self.options.selectors.listSortBtn, self.$element),
             $refresh = $(self.options.selectors.refresh, self.$element);
 
         $start.attr('disabled', 'disabled');
         $previous.attr('disabled', 'disabled');
         $next.attr('disabled', 'disabled');
         $end.attr('disabled', 'disabled');
+        $listSort.removeAttr('disabled');
         $refresh.removeAttr('disabled');
 
         if (self.pageNumber > 1) {
@@ -145,20 +147,55 @@
     function refreshColumnHeaders(self, sortDefinitions) {
         self.sortOrder = [];
 
-        var $ths = self.$table.find(self.options.selectors.sortable + '[data-table-sort]'),
+        var $ths = self.$table.find(self.options.selectors.sortable),
+            $items = self.$sortMenu.find(self.options.selectors.listSortable),
             $th,
+            $item,
             i;
 
         $ths.removeAttr('data-table-sort');
+        $items.removeAttr('data-table-sort');
 
         for (i = 0; i < sortDefinitions.length; i += 1) {
-            $th = self.$table.find('> thead >tr:last > th[data-col-name=' + sortDefinitions[i].name + ']');
+            $th = $ths.filter('[data-col-name=' + sortDefinitions[i].name + ']');
+            $item = $items.filter('[data-col-name=' + sortDefinitions[i].name + ']');
 
             $th.attr('data-table-sort', sortDefinitions[i].sort);
+            $item.attr('data-table-sort', sortDefinitions[i].sort);
+
             self.sortOrder.push(sortDefinitions[i].name);
         }
 
         self.$element.attr('data-sort-order', JSON.stringify(self.sortOrder));
+    }
+
+    /**
+     * Find and add the sort definition in the sort definitions array.
+     *
+     * @param {TablePager} self            The table pager instance
+     * @param {Array}      sortDefinitions The sort definitions
+     * @param {String}     sortOrderItem   The name of the sort order item
+     *
+     * @private
+     */
+    function addSortDef(self, sortDefinitions, sortOrderItem) {
+        var $ths = self.$table.find(self.options.selectors.sortable + '[data-table-sort]'),
+            $items = self.$sortMenu.find(self.options.selectors.listSortable + '[data-table-sort]'),
+            $th = $ths.filter('[data-col-name=' + sortOrderItem + ']'),
+            $item = $items.filter('[data-col-name=' + sortOrderItem + ']'),
+            value;
+
+        if (undefined !== $th.attr('data-table-sort')) {
+            value = {name: sortOrderItem, sort: $th.attr('data-table-sort')};
+        }
+
+        if (undefined !== $item.attr('data-table-sort')) {
+            value = {name: sortOrderItem, sort: $item.attr('data-table-sort')};
+        }
+
+        if (undefined !== value) {
+            sortDefinitions.push(value);
+        }
     }
 
     /**
@@ -170,15 +207,10 @@
      */
     function getSortColumns(self) {
         var sortDef = [],
-            $th,
             i;
 
         for (i = 0; i < self.sortOrder.length; i += 1) {
-            $th = self.$table.find(self.options.selectors.sortable + '[data-col-name=' + self.sortOrder[i] + ']');
-
-            if (undefined !== $th.attr('data-table-sort')) {
-                sortDef.push({name: self.sortOrder[i], sort: $th.attr('data-table-sort')});
-            }
+            addSortDef(self, sortDef, self.sortOrder[i]);
         }
 
         return sortDef;
@@ -315,10 +347,20 @@
      */
     function onSortColumnAction(event) {
         var self = event.data,
-            $col = $(event.target),
-            multiple = event.ctrlKey ? self.isMultiSortable() : event.ctrlKey,
-            direction = $col.attr('data-table-sort'),
-            oldDirection = (undefined === direction) ? 'asc' : direction;
+            $col = undefined === $(event.target).attr('data-col-name') ? $(event.target).parent() : $(event.target),
+            multiple,
+            direction,
+            oldDirection;
+
+        event.preventDefault();
+
+        if (undefined === $col.attr('data-col-name')) {
+            return;
+        }
+
+        multiple = event.ctrlKey ? self.isMultiSortable() : event.ctrlKey;
+        direction = $col.attr('data-table-sort');
+        oldDirection = (undefined === direction) ? 'asc' : direction;
 
         if (undefined === direction || 'desc' === direction) {
             direction = 'asc';
@@ -410,6 +452,7 @@
         this.options       = $.extend(true, {}, TablePager.DEFAULTS, options);
         this.$element      = $(element);
         this.$table        = $('#' + this.options.tableId);
+        this.$sortMenu     = $(this.options.selectors.listSortMenu, this.$element);
         this.sizeList      = [];
         this.pageSize      = this.options.pageSize;
         this.pageNumber    = this.options.pageNumber;
@@ -430,6 +473,9 @@
         this.$table
             .on('click.st.tablepager', this.options.selectors.sortable, this, onSortColumnAction);
 
+        this.$sortMenu
+            .on('click.st.tablepager', this.options.selectors.listSortable, this, onSortColumnAction);
+
         this.$element
             .on('change.st.tablepager', this.options.selectors.sizeList, this, onPageSizeAction)
             .on('click.st.tablepager', this.options.selectors.startPage, this, onStartPageAction)
@@ -440,6 +486,7 @@
             .on('click.st.tablepager', this.options.selectors.refresh, this, onRefreshAction);
 
         var $cols = $(this.options.selectors.sortable, this.$table),
+            $sorts = $(this.options.selectors.listSortable, this.$sortMenu),
             $icon,
             i;
 
@@ -448,6 +495,14 @@
 
             if (0 === $icon.size()) {
                 $cols.eq(i).append(this.options.sortIconTemplate);
+            }
+        }
+
+        for (i = 0; i < $sorts.size(); i += 1) {
+            $icon = $('> i.table-sort-icon', $sorts.eq(i));
+
+            if (0 === $icon.size()) {
+                $sorts.eq(i).append(this.options.sortIconTemplate);
             }
         }
 
@@ -494,6 +549,9 @@
             nextPage:     'button.table-pager-next-page',
             endPage:      'button.table-pager-end-page',
             refresh:      'button.table-pager-refresh',
+            listSortBtn:  'button.table-pager-list-sort',
+            listSortMenu: 'ul.table-pager-list-sort-menu',
+            listSortable: '> li > a[data-table-pager-sortable=true]',
             sortable:     '> thead > tr:last > th[data-table-pager-sortable=true]'
         }
     };
@@ -547,7 +605,6 @@
 
         var sortOrder,
             sortDef,
-            $th,
             i;
 
         if ('asc' !== direction && 'desc' !== direction) {
@@ -565,11 +622,7 @@
             if (column === sortOrder[i]) {
                 sortDef.push({name: column, sort: direction});
             } else {
-                $th = this.$table.find('> thead >tr:last > th[data-col-name=' + sortOrder[i] + ']');
-
-                if (undefined !== $th.attr('data-table-sort')) {
-                    sortDef.push({name: sortOrder[i], sort: $th.attr('data-table-sort')});
-                }
+                addSortDef(this, sortDef, sortOrder[i]);
             }
         }
 
@@ -785,6 +838,7 @@
         $(this.options.selectors.pageNumber, this.$element).attr('disabled', 'disabled');
         $(this.options.selectors.nextPage, this.$element).attr('disabled', 'disabled');
         $(this.options.selectors.endPage, this.$element).attr('disabled', 'disabled');
+        $(this.options.selectors.listSortBtn, this.$element).attr('disabled', 'disabled');
         $(this.options.selectors.refresh, this.$element).attr('disabled', 'disabled');
 
         var self = this,
@@ -871,7 +925,6 @@
                 self.pageNumber = data.pageNumber;
                 self.pageSize = data.pageSize;
                 self.size = data.size;
-                refreshColumnHeaders(self, data.sortColumns);
                 self.$table.trigger(event);
                 self.refreshPager();
             },
@@ -955,6 +1008,9 @@
     TablePager.prototype.destroy = function () {
         this.$table
             .off('click.st.tablepager', this.options.selectors.sortable, onSortColumnAction);
+
+        this.$sortMenu
+            .off('click.st.tablepager', this.options.selectors.listSortable, onSortColumnAction);
 
         if (null !== this.$affixTarget) {
             this.$affixTarget.off('scroll.st.tablepager', null, onAffixScrollAction);
