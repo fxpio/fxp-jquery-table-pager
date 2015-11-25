@@ -1022,6 +1022,11 @@
             this.$mock.remove();
         }
 
+        this.$element.removeClass(this.options.affixClass);
+        this.$mock.detach();
+        this.$mock.css('height', '');
+        $('body').removeClass(this.options.affixBodyClass);
+
         this.$element
             .off('change.st.tablepager', this.options.selectors.sizeList, onPageSizeAction)
             .off('click.st.tablepager', this.options.selectors.startPage, onStartPageAction)
