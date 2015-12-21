@@ -543,6 +543,7 @@
         affixScrollSpeed: 300,
         loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
+        emptyMessage:     null,
         selectors:        {
             sizeList:     'select.table-pager-size-list',
             startPage:    'button.table-pager-start-page',
@@ -918,6 +919,15 @@
                         $tr.append($td);
                     }
 
+                    content.push($tr);
+                }
+
+                if (0 === data.rows.length && null !== self.options.emptyMessage) {
+                    $tr = $('<tr></tr>');
+                    $td = $('<td></td>');
+                    $td.attr('colspan', $cols.size());
+                    $td.append(self.options.emptyMessage);
+                    $tr.append($td);
                     content.push($tr);
                 }
 
