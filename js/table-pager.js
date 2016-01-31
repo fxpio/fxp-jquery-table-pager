@@ -386,7 +386,10 @@
      * @private
      */
     function getPositionTop($affixTarget, $element) {
-        return $affixTarget.scrollTop() + $element.offset().top - $affixTarget.offset().top;
+        var isWindow = $affixTarget.get(0) === $(window).get(0),
+            affixTop = isWindow ? $affixTarget.scrollTop() : $affixTarget.offset().top;
+
+        return $affixTarget.scrollTop() + $element.offset().top - affixTop;
     }
 
     /**
@@ -400,11 +403,13 @@
      */
     function onAffixScrollAction(event) {
         var self = event.data,
+            isWindow = self.$affixTarget.get(0) === $(window).get(0),
             affixClass = self.options.affixClass,
             affixMinHeight = self.options.affixMinHeight,
+            affixTop = isWindow ? 0 : self.$affixTarget.offset().top,
             minHeight = affixMinHeight > 0 && affixMinHeight <= 1 ? (self.$affixTarget.height() * affixMinHeight) : affixMinHeight,
             isOver = self.$table.height() >= minHeight,
-            offsetBottom = self.$table.offset().top + self.$table.outerHeight() - self.$affixTarget.offset().top - self.$element.outerHeight();
+            offsetBottom = self.$table.offset().top + self.$table.outerHeight() - affixTop - self.$element.outerHeight();
 
         if (undefined !== self.affixDelay) {
             window.clearTimeout(self.affixDelay);
