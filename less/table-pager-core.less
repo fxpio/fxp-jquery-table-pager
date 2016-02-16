@@ -42,10 +42,6 @@
         text-align: left;
         min-width: 60px;
         display: inline-block;
-
-        &:focus {
-            background-color: @input-bg;
-        }
     }
 
     .table-pager-page-number {
@@ -67,7 +63,7 @@
 
     + .table,
     + .table-responsive > .table {
-        border-top: 1px solid @table-border-color;
+        border-top: 1px solid transparent;
 
         tbody {
             > tr:empty {
@@ -85,11 +81,9 @@ caption[data-table-pager-loading-info=true] {
     left: 0;
     z-index: 1;
     text-align: center;
-    background: @table-pager-loading-bg;
 
     &.default-loading-icon {
         font-size: @table-pager-loading-size;
-        color: @table-pager-loading-color;
 
         > i:before {
             content: @table-pager-loading-icon;

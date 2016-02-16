@@ -1,0 +1,34 @@
+//
+// Table Sort Theme
+// --------------------------------------------------
+
+.table > thead th,
+.table-pager-list-sort-menu > li a {
+    &[data-table-pager-sortable=true] {
+        &:hover {
+            color: @table-pager-sort-header-hover-color;
+        }
+
+        &[data-table-sort=asc] {
+            > i.table-sort-icon {
+                color: @table-pager-sort-icon-sorting-color;
+            }
+        }
+
+        &[data-table-sort=desc] {
+            > i.table-sort-icon {
+                color: @table-pager-sort-icon-sorting-color;
+            }
+        }
+    }
+}
+
+.table {
+    > tbody {
+        th {
+            > i.table-sort-icon {
+                color: @table-sort-icon-color;
+            }
+        }
+    }
+}

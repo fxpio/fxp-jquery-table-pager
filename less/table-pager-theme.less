@@ -1,0 +1,24 @@
+//
+// Table Pager Theme
+// --------------------------------------------------
+
+.table-pager {
+    .table-pager-size-list {
+        &:focus {
+            background-color: @input-bg;
+        }
+    }
+
+    + .table,
+    + .table-responsive > .table {
+        border-top-color: @table-border-color;
+    }
+}
+
+caption[data-table-pager-loading-info=true] {
+    background: @table-pager-loading-bg;
+
+    &.default-loading-icon {
+        color: @table-pager-loading-color;
+    }
+}

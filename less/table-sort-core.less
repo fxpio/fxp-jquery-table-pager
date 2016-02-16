@@ -16,7 +16,6 @@
 
         &:hover {
             cursor: pointer;
-            color: @table-pager-sort-header-hover-color;
         }
 
         > i.table-sort-icon {
@@ -26,8 +25,6 @@
 
         &[data-table-sort=asc] {
             > i.table-sort-icon {
-                color: @table-pager-sort-icon-sorting-color;
-
                 &:before {
                     content: @table-sort-icon-asc;
                 }
@@ -36,8 +33,6 @@
 
         &[data-table-sort=desc] {
             > i.table-sort-icon {
-                color: @table-pager-sort-icon-sorting-color;
-
                 &:before {
                     content: @table-sort-icon-desc;
                 }
@@ -53,7 +48,6 @@
                 display: none;
                 margin-left: 3px;
                 vertical-align: middle;
-                color: @table-sort-icon-color;
             }
 
             &[data-table-sort=asc] {
