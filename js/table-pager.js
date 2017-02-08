@@ -850,7 +850,6 @@
         $(this.options.selectors.refresh, this.$element).attr('disabled', 'disabled');
 
         var self = this,
-            event = $.Event('table-pager-refreshing', {'tablePager': this}),
             data = {},
             dataPrefix = '';
 
@@ -865,7 +864,7 @@
         data[dataPrefix + 'sc'] = getSortColumns(this);
 
         createLoadingInfo(this);
-        this.$table.trigger(event);
+        this.$table.trigger($.Event('table-pager-refreshing', {'tablePager': this}));
 
         // scroll to the top of table
         if (null !== this.$affixTarget && self.$element.hasClass(self.options.affixClass)) {
@@ -893,7 +892,8 @@
                     attr,
                     i,
                     j;
-                event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
+
+                self.$table.trigger($.Event('table-pager-pre-success', {'tablePager': self, 'ret': ret}));
 
                 for (i = 0; i < data.rows.length; i += 1) {
                     $tr = $('<tr></tr>');
@@ -942,7 +942,8 @@
                 self.pageNumber = data.pageNumber;
                 self.pageSize = data.pageSize;
                 self.size = data.size;
-                self.$table.trigger(event);
+                self.$table.trigger($.Event('table-pager-post-success', {'tablePager': self, 'ret': ret}));
+                self.$table.trigger($.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret}));
                 self.refreshPager();
             },
             error: function (data, textStatus, jqXHR) {
@@ -951,10 +952,10 @@
                     textStatus: textStatus,
                     jqXHR:      jqXHR
                 };
-                event = $.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret});
 
                 removeLoadingInfo(self);
-                self.$table.trigger(event);
+                self.$table.trigger($.Event('table-pager-error', {'tablePager': self, 'ret': ret}));
+                self.$table.trigger($.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret}));
                 self.refreshPager();
             }
         });
