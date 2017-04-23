@@ -879,6 +879,7 @@
                     attrColumns = '_attr_columns',
                     $body = $('> tbody', self.$table),
                     $cols = $('> thead > tr:last', self.$table).eq(0).children(),
+                    rows = undefined === data.rows ? [] : data.rows,
                     content = [],
                     ret = {
                         data:       data,
@@ -895,19 +896,19 @@
 
                 self.$table.trigger($.Event('table-pager-pre-success', {'tablePager': self, 'ret': ret}));
 
-                for (i = 0; i < data.rows.length; i += 1) {
+                for (i = 0; i < rows.length; i += 1) {
                     $tr = $('<tr></tr>');
 
-                    if (undefined !== data.rows[i][rowId]) {
-                        $tr.attr('data-row-id', data.rows[i][rowId]);
+                    if (undefined !== rows[i][rowId]) {
+                        $tr.attr('data-row-id', rows[i][rowId]);
                     }
 
                     for (j = 0; j < $cols.size(); j += 1) {
                         colName = $cols.eq(j).attr('data-col-name');
                         $td = $('<td></td>');
 
-                        if (undefined !== data.rows[i][attrColumns] && data.rows[i][attrColumns][colName]) {
-                            attrs = data.rows[i][attrColumns][colName];
+                        if (undefined !== rows[i][attrColumns] && rows[i][attrColumns][colName]) {
+                            attrs = rows[i][attrColumns][colName];
 
                             for (attr in attrs) {
                                 if (attrs.hasOwnProperty(attr)) {
@@ -916,8 +917,8 @@
                             }
                         }
 
-                        if (undefined !== data.rows[i][colName]) {
-                            $td.append(data.rows[i][colName]);
+                        if (undefined !== rows[i][colName]) {
+                            $td.append(rows[i][colName]);
                         }
 
                         $td.attr('data-col-name', colName);
@@ -927,7 +928,7 @@
                     content.push($tr);
                 }
 
-                if (0 === data.rows.length && null !== self.options.emptyMessage) {
+                if (0 === rows.length && null !== self.options.emptyMessage) {
                     $tr = $('<tr></tr>');
                     $td = $('<td></td>');
                     $td.attr('colspan', $cols.size());
