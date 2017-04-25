@@ -1,7 +1,29 @@
 {
-  "name": "sonatra-jquery-table-pager",
-  "description": " ",
-  "repository": {},
+  "name": "@sonatra/jquery-table-pager",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "François Pluchino <francois.pluchino@sonatra.com>",
+  "contributors": [],
+  "description": "A jquery ajax pager for table",
+  "keywords": [
+    "table",
+    "ajax",
+    "pager",
+    "jquery"
+  ],
+  "homepage": "https://github.com/sonatra/sonatra-jquery-table-pager",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sonatra/sonatra-jquery-table-pager.git"
+  },
+  "bugs": {
+    "url" : "https://github.com/sonatra/sonatra-jquery-table-pager/issues"
+  },
+  "engines": {},
+  "main": "js/table-pager.js",
+  "dependencies": {
+    "jquery": "^2.1.0"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
@@ -10,9 +32,9 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-contrib-less": "^1.0.1",
     "grunt-browser-sync": "^2.1.3",
-    "grunt-nodemon": "^0.4.0"
-  },
-  "engines": {
-    "node": ">=0.10.0"
+    "grunt-nodemon": "^0.4.0",
+    "requirejs": "^2.0.0",
+    "bootstrap": "^3.3.0",
+    "font-awesome": "^4.7.0"
   }
 }
