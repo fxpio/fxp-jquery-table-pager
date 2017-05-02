@@ -170,6 +170,23 @@
     }
 
     /**
+     * Refresh the column headers.
+     *
+     * @param {TablePager} self The table pager instance
+     *
+     * @private
+     */
+    function refreshEmptySelector(self) {
+        if (null !== self.options.emptySelector) {
+            if (0 === self.size) {
+                $(self.options.emptySelector).addClass(self.options.emptyClass);
+            } else {
+                $(self.options.emptySelector).removeClass(self.options.emptyClass);
+            }
+        }
+    }
+
+    /**
      * Find and add the sort definition in the sort definitions array.
      *
      * @param {TablePager} self            The table pager instance
@@ -549,6 +566,8 @@
         loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
         sortIconTemplate: '<i class="table-sort-icon fa"></i>',
         emptyMessage:     null,
+        emptySelector:    null,
+        emptyClass:       'table-empty',
         selectors:        {
             sizeList:     'select.table-pager-size-list',
             startPage:    'button.table-pager-start-page',
@@ -821,6 +840,7 @@
      * @this TablePager
      */
     TablePager.prototype.refreshPager = function (rebuild) {
+        refreshEmptySelector(this);
         refreshSizeList(this, rebuild);
         refreshPageNumber(this);
         refreshPageButtons(this);
