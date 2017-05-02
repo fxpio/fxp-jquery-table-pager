@@ -932,7 +932,7 @@
                     $tr = $('<tr></tr>');
                     $td = $('<td></td>');
                     $td.attr('colspan', $cols.size());
-                    $td.append(self.options.emptyMessage);
+                    $td.append($('<div />').html(self.options.emptyMessage).text());
                     $tr.append($td);
                     content.push($tr);
                 }
