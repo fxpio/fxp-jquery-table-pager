@@ -870,6 +870,7 @@
         $(this.options.selectors.refresh, this.$element).attr('disabled', 'disabled');
 
         var self = this,
+            ajaxParams = {},
             data = {},
             dataPrefix = '';
 
@@ -884,14 +885,14 @@
         data[dataPrefix + 'sc'] = getSortColumns(this);
 
         createLoadingInfo(this);
-        this.$table.trigger($.Event('table-pager-refreshing', {'tablePager': this}));
+        this.$table.trigger($.Event('table-pager-refreshing', {'tablePager': this, 'ajax': ajaxParams, ajaxData: data}));
 
         // scroll to the top of table
         if (null !== this.$affixTarget && self.$element.hasClass(self.options.affixClass)) {
             this.$affixTarget.animate({scrollTop: getPositionTop(self.$affixTarget, self.$mock) + 1}, this.options.affixScrollSpeed);
         }
 
-        $.ajax(this.options.url, {
+        $.ajax(this.options.url, $.extend(true, {}, ajaxParams, {
             type: this.options.method,
             data: data,
             success: function (data, textStatus, jqXHR) {
@@ -979,7 +980,7 @@
                 self.$table.trigger($.Event('table-pager-refreshed', {'tablePager': self, 'ret': ret}));
                 self.refreshPager();
             }
-        });
+        }));
     };
 
     /**
