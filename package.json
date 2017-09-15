@@ -17,7 +17,7 @@
     "url": "https://github.com/sonatra/sonatra-jquery-table-pager.git"
   },
   "bugs": {
-    "url" : "https://github.com/sonatra/sonatra-jquery-table-pager/issues"
+    "url": "https://github.com/sonatra/sonatra-jquery-table-pager/issues"
   },
   "engines": {},
   "main": "js/table-pager.js",
