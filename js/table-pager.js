@@ -514,18 +514,18 @@
             $icon,
             i;
 
-        for (i = 0; i < $cols.size(); i += 1) {
+        for (i = 0; i < $cols.length; i += 1) {
             $icon = $('> i.table-sort-icon', $cols.eq(i));
 
-            if (0 === $icon.size()) {
+            if (0 === $icon.length) {
                 $cols.eq(i).append(this.options.sortIconTemplate);
             }
         }
 
-        for (i = 0; i < $sorts.size(); i += 1) {
+        for (i = 0; i < $sorts.length; i += 1) {
             $icon = $('> i.table-sort-icon', $sorts.eq(i));
 
-            if (0 === $icon.size()) {
+            if (0 === $icon.length) {
                 $sorts.eq(i).append(this.options.sortIconTemplate);
             }
         }
@@ -799,7 +799,7 @@
      * @this TablePager
      */
     TablePager.prototype.getSizeInTable = function () {
-        return this.$table.find('> tbody > tr[data-row-id]').size();
+        return this.$table.find('> tbody > tr[data-row-id]').length;
     };
 
     /**
@@ -924,7 +924,7 @@
                         $tr.attr('data-row-id', rows[i][rowId]);
                     }
 
-                    for (j = 0; j < $cols.size(); j += 1) {
+                    for (j = 0; j < $cols.length; j += 1) {
                         colName = $cols.eq(j).attr('data-col-name');
                         $td = $('<td></td>');
 
@@ -952,7 +952,7 @@
                 if (0 === rows.length && null !== self.options.emptyMessage) {
                     $tr = $('<tr></tr>');
                     $td = $('<td></td>');
-                    $td.attr('colspan', $cols.size());
+                    $td.attr('colspan', $cols.length);
                     $td.append($('<div />').html(self.options.emptyMessage).text());
                     $tr.append($td);
                     content.push($tr);
