@@ -1,7 +1,7 @@
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -489,25 +489,25 @@
         this.offsetTop     = null;
 
         if (null !== this.$affixTarget) {
-            this.$affixTarget.on('scroll.st.tablepager', null, this, onAffixScrollAction);
+            this.$affixTarget.on('scroll.fxp.tablepager', null, this, onAffixScrollAction);
         }
 
         this.$element.attr('data-size', this.size);
 
         this.$table
-            .on('click.st.tablepager', this.options.selectors.sortable, this, onSortColumnAction);
+            .on('click.fxp.tablepager', this.options.selectors.sortable, this, onSortColumnAction);
 
         this.$sortMenu
-            .on('click.st.tablepager', this.options.selectors.listSortable, this, onSortColumnAction);
+            .on('click.fxp.tablepager', this.options.selectors.listSortable, this, onSortColumnAction);
 
         this.$element
-            .on('change.st.tablepager', this.options.selectors.sizeList, this, onPageSizeAction)
-            .on('click.st.tablepager', this.options.selectors.startPage, this, onStartPageAction)
-            .on('click.st.tablepager', this.options.selectors.previousPage, this, onPreviousPageAction)
-            .on('change.st.tablepager', this.options.selectors.pageNumber, this, onPageNumberAction)
-            .on('click.st.tablepager', this.options.selectors.nextPage, this, onNextPageAction)
-            .on('click.st.tablepager', this.options.selectors.endPage, this, onEndPageAction)
-            .on('click.st.tablepager', this.options.selectors.refresh, this, onRefreshAction);
+            .on('change.fxp.tablepager', this.options.selectors.sizeList, this, onPageSizeAction)
+            .on('click.fxp.tablepager', this.options.selectors.startPage, this, onStartPageAction)
+            .on('click.fxp.tablepager', this.options.selectors.previousPage, this, onPreviousPageAction)
+            .on('change.fxp.tablepager', this.options.selectors.pageNumber, this, onPageNumberAction)
+            .on('click.fxp.tablepager', this.options.selectors.nextPage, this, onNextPageAction)
+            .on('click.fxp.tablepager', this.options.selectors.endPage, this, onEndPageAction)
+            .on('click.fxp.tablepager', this.options.selectors.refresh, this, onRefreshAction);
 
         var $cols = $(this.options.selectors.sortable, this.$table),
             $sorts = $(this.options.selectors.listSortable, this.$sortMenu),
@@ -1047,13 +1047,13 @@
      */
     TablePager.prototype.destroy = function () {
         this.$table
-            .off('click.st.tablepager', this.options.selectors.sortable, onSortColumnAction);
+            .off('click.fxp.tablepager', this.options.selectors.sortable, onSortColumnAction);
 
         this.$sortMenu
-            .off('click.st.tablepager', this.options.selectors.listSortable, onSortColumnAction);
+            .off('click.fxp.tablepager', this.options.selectors.listSortable, onSortColumnAction);
 
         if (null !== this.$affixTarget) {
-            this.$affixTarget.off('scroll.st.tablepager', null, onAffixScrollAction);
+            this.$affixTarget.off('scroll.fxp.tablepager', null, onAffixScrollAction);
         }
 
         if (null !== this.$mock) {
@@ -1066,13 +1066,13 @@
         $('body').removeClass(this.options.affixBodyClass);
 
         this.$element
-            .off('change.st.tablepager', this.options.selectors.sizeList, onPageSizeAction)
-            .off('click.st.tablepager', this.options.selectors.startPage, onStartPageAction)
-            .off('click.st.tablepager', this.options.selectors.previousPage, onPreviousPageAction)
-            .off('change.st.tablepager', this.options.selectors.pageNumber, onPageNumberAction)
-            .off('click.st.tablepager', this.options.selectors.nextPage, onNextPageAction)
-            .off('click.st.tablepager', this.options.selectors.endPage, onEndPageAction)
-            .off('click.st.tablepager', this.options.selectors.refresh, onRefreshAction)
+            .off('change.fxp.tablepager', this.options.selectors.sizeList, onPageSizeAction)
+            .off('click.fxp.tablepager', this.options.selectors.startPage, onStartPageAction)
+            .off('click.fxp.tablepager', this.options.selectors.previousPage, onPreviousPageAction)
+            .off('change.fxp.tablepager', this.options.selectors.pageNumber, onPageNumberAction)
+            .off('click.fxp.tablepager', this.options.selectors.nextPage, onNextPageAction)
+            .off('click.fxp.tablepager', this.options.selectors.endPage, onEndPageAction)
+            .off('click.fxp.tablepager', this.options.selectors.refresh, onRefreshAction)
             .removeData('st.tablepager');
     };
 

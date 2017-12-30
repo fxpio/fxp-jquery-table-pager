@@ -1,5 +1,5 @@
-Sonatra Jquery Table Pager
-==========================
+Fxp Jquery Table Pager
+======================
 
 This jquery plugin is a AJAX pager for table.
 
@@ -26,10 +26,10 @@ This javascript component is under the MIT license. See the complete license:
 About
 -----
 
-Sonatra Jquery Table Pager is a [sonatra](https://github.com/sonatra) initiative.
-See also the list of [contributors](https://github.com/sonatra/sonatra-jquery-table-pager/graphs/contributors).
+Fxp Jquery Table Pager is a [François Pluchino](https://github.com/francoispluchino) initiative.
+See also the list of [contributors](https://github.com/fxpio/fxp-jquery-table-pager/graphs/contributors).
 
 Reporting an issue or a feature request
 ---------------------------------------
 
-Issues and feature requests are tracked in the [Github issue tracker](https://github.com/sonatra/sonatra-jquery-table-pager/issues).
+Issues and feature requests are tracked in the [Github issue tracker](https://github.com/fxpio/fxp-jquery-table-pager/issues).

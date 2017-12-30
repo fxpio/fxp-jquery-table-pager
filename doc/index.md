@@ -14,7 +14,7 @@ Installation
 ------------
 
 ```
-npm install @sonatra/jquery-table-pager --save
+npm install @fxp/jquery-table-pager --save
 ```
 
 Dev installation

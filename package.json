@@ -1,8 +1,8 @@
 {
-  "name": "@sonatra/jquery-table-pager",
+  "name": "@fxp/jquery-table-pager",
   "version": "1.0.0",
   "license": "MIT",
-  "author": "François Pluchino <francois.pluchino@sonatra.com>",
+  "author": "François Pluchino <francois.pluchino@gmail.com>",
   "contributors": [],
   "description": "A jquery ajax pager for table",
   "keywords": [
@@ -11,13 +11,13 @@
     "pager",
     "jquery"
   ],
-  "homepage": "https://github.com/sonatra/sonatra-jquery-table-pager",
+  "homepage": "https://github.com/fxpio/fxp-jquery-table-pager",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sonatra/sonatra-jquery-table-pager.git"
+    "url": "https://github.com/fxpio/fxp-jquery-table-pager.git"
   },
   "bugs": {
-    "url": "https://github.com/sonatra/sonatra-jquery-table-pager/issues"
+    "url": "https://github.com/fxpio/fxp-jquery-table-pager/issues"
   },
   "engines": {},
   "main": "js/table-pager.js",
