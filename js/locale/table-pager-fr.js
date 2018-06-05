@@ -7,34 +7,8 @@
  * file that was distributed with this source code.
  */
 
-/*global define*/
-/*global jQuery*/
+import TablePager from '../table-pager';
 
-/**
- * @param {jQuery} $
- *
- * @typedef {object} define.amd
- */
-(function (factory) {
-    'use strict';
-
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery', '../table-pager'], factory);
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
-    'use strict';
-
-    // TABLE PAGER CLASS DEFINITION
-    // ============================
-
-    $.fn.tablePager.Constructor.LANGUAGES = $.extend(true, {}, $.fn.tablePager.Constructor.LANGUAGES, {
-        fr: {
-            all: 'Tout'
-        }
-    });
-
-}));
+TablePager.addLocale('fr', {
+    all: 'Tout'
+});
