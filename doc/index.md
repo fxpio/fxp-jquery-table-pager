@@ -1,15 +1,6 @@
 Getting Started
 ===============
 
-Prerequisites
--------------
-
-This library require:
-
-- jquery
-- bootstrap (optional)
-- font-awesome (optional)
-
 Installation
 ------------
 
