@@ -9,6 +9,8 @@
 
 import TablePager from '../table-pager';
 
-TablePager.addLocale('fr', {
-    all: 'Tout'
-});
+TablePager.locales = {
+    'fr': {
+        all: 'Tout'
+    }
+};

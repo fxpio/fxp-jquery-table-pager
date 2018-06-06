@@ -31,48 +31,6 @@ import {
 } from "./utils/refresh";
 
 /**
- * Defaults options.
- */
-const DEFAULTS = {
-    locale:           'en',
-    tableId:          null,
-    pageSize:         100,
-    pageNumber:       1,
-    addAllInSize:     false,
-    sizeList:         [2, 5, 10, 25, 50, 100, 150, 200],
-    url:              null,
-    method:           'get',
-    ajaxId:           null,
-    parameters:       {},
-    multiSortable:    false,
-    sortOrder:        [],
-    init:             false,
-    affixTarget:      window,
-    affixMinHeight:   300,
-    affixClass:       'affix',
-    affixBodyClass:   'table-pager-affixed',
-    affixScrollSpeed: 300,
-    loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
-    sortIconTemplate: '<i class="table-sort-icon fa"></i>',
-    emptyMessage:     null,
-    emptySelector:    null,
-    emptyClass:       'table-empty',
-    selectors:        {
-        sizeList:     'select.table-pager-size-list',
-        startPage:    'button.table-pager-start-page',
-        previousPage: 'button.table-pager-previous-page',
-        pageNumber:   'input.table-pager-page-number',
-        nextPage:     'button.table-pager-next-page',
-        endPage:      'button.table-pager-end-page',
-        refresh:      'button.table-pager-refresh',
-        listSortBtn:  'button.table-pager-list-sort',
-        listSortMenu: 'ul.table-pager-list-sort-menu',
-        listSortable: '> li > a[data-table-pager-sortable=true]',
-        sortable:     '> thead > tr:last > th[data-table-pager-sortable=true]'
-    }
-};
-
-/**
  * Table Pager class.
  */
 export default class TablePager extends BaseI18nPlugin
@@ -84,7 +42,7 @@ export default class TablePager extends BaseI18nPlugin
      * @param {object}      options The options
      */
     constructor(element, options = {}) {
-        super(element, $.extend(true, {}, DEFAULTS, options));
+        super(element, $.extend(true, {}, TablePager.defaultOptions, options));
 
         this.$table       = $('#' + this.options.tableId);
         this.$sortMenu    = $(this.options.selectors.listSortMenu, this.$element);
@@ -565,8 +523,52 @@ export default class TablePager extends BaseI18nPlugin
     }
 }
 
-TablePager.addLocale('en', {
-    all: 'All'
-});
+/**
+ * Defaults options.
+ */
+TablePager.defaultOptions = {
+    locale:           'en',
+    tableId:          null,
+    pageSize:         100,
+    pageNumber:       1,
+    addAllInSize:     false,
+    sizeList:         [2, 5, 10, 25, 50, 100, 150, 200],
+    url:              null,
+    method:           'get',
+    ajaxId:           null,
+    parameters:       {},
+    multiSortable:    false,
+    sortOrder:        [],
+    init:             false,
+    affixTarget:      window,
+    affixMinHeight:   300,
+    affixClass:       'affix',
+    affixBodyClass:   'table-pager-affixed',
+    affixScrollSpeed: 300,
+    loadingTemplate:  '<caption class="default-loading-icon"><i class="fa fa-spin"></i></caption>',
+    sortIconTemplate: '<i class="table-sort-icon fa"></i>',
+    emptyMessage:     null,
+    emptySelector:    null,
+    emptyClass:       'table-empty',
+    selectors:        {
+        sizeList:     'select.table-pager-size-list',
+        startPage:    'button.table-pager-start-page',
+        previousPage: 'button.table-pager-previous-page',
+        pageNumber:   'input.table-pager-page-number',
+        nextPage:     'button.table-pager-next-page',
+        endPage:      'button.table-pager-end-page',
+        refresh:      'button.table-pager-refresh',
+        listSortBtn:  'button.table-pager-list-sort',
+        listSortMenu: 'ul.table-pager-list-sort-menu',
+        listSortable: '> li > a[data-table-pager-sortable=true]',
+        sortable:     '> thead > tr:last > th[data-table-pager-sortable=true]'
+    }
+};
+
+TablePager.locales = {
+    'en': {
+        all: 'All'
+    }
+};
 
 pluginify('tablePager', 'fxp.tablepager', TablePager, true, '[data-table-pager="true"]');
