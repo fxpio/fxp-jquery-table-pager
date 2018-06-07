@@ -42,7 +42,7 @@ export default class TablePager extends BaseI18nPlugin
      * @param {object}      options The options
      */
     constructor(element, options = {}) {
-        super(element, $.extend(true, {}, TablePager.defaultOptions, options));
+        super(element, options);
 
         this.$table       = $('#' + this.options.tableId);
         this.$sortMenu    = $(this.options.selectors.listSortMenu, this.$element);
