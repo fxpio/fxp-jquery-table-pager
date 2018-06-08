@@ -12,4 +12,4 @@ import 'font-awesome/less/font-awesome.less';
 import '../less/table-pager.less';
 import '../less/table-sort.less';
 import '../js/table-pager';
-import '../js/locale/table-pager-fr';
+import '../js/locale/fr';
