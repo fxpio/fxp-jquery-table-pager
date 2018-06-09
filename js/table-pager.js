@@ -9,6 +9,7 @@
 
 import pluginify from '@fxp/jquery-pluginify';
 import BaseI18nPlugin from '@fxp/jquery-pluginify/js/i18n-plugin';
+import $ from 'jquery';
 import {getPositionTop, onAffixScrollAction} from "./utils/affix";
 import {
     onEndPageAction,
