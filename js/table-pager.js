@@ -528,7 +528,6 @@ export default class TablePager extends BaseI18nPlugin
  * Defaults options.
  */
 TablePager.defaultOptions = {
-    locale:           'en',
     tableId:          null,
     pageSize:         100,
     pageNumber:       1,
