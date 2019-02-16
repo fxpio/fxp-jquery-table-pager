@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import TablePager from '../table-pager';
+import FxpTablePager from '../table-pager';
 
-TablePager.locales = {
+FxpTablePager.locales = {
     'fr': {
         all: 'Tout'
     }

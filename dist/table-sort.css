@@ -1,0 +1,53 @@
+.table > thead th[data-table-pager-sortable=true]:not([data-table-sort]) > i.table-sort-icon:before,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true]:not([data-table-sort]) > i.table-sort-icon:before {
+  content: "\f0dc";
+}
+.table > thead th[data-table-pager-sortable=true]:hover,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true]:hover {
+  cursor: pointer;
+}
+.table > thead th[data-table-pager-sortable=true] > i.table-sort-icon,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true] > i.table-sort-icon {
+  display: inline-block;
+  margin-left: 4px;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon:before,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon:before {
+  content: "\f0dd";
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon:before,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon:before {
+  content: "\f0de";
+}
+.table > tbody th > i.table-sort-icon {
+  display: none;
+  margin-left: 3px;
+  vertical-align: middle;
+}
+.table > tbody th[data-table-sort=asc] > i.table-sort-icon {
+  display: inline-block;
+}
+.table > tbody th[data-table-sort=asc] > i.table-sort-icon:before {
+  content: "\f0dd";
+}
+.table > tbody th[data-table-sort=desc] > i.table-sort-icon {
+  display: inline-block;
+}
+.table > tbody th[data-table-sort=desc] > i.table-sort-icon:before {
+  content: "\f0de";
+}
+.table > thead th[data-table-pager-sortable=true]:hover,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true]:hover {
+  color: #028dff;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true][data-table-sort=asc] > i.table-sort-icon {
+  color: #00b092;
+}
+.table > thead th[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon,
+.table-pager-list-sort-menu > li a[data-table-pager-sortable=true][data-table-sort=desc] > i.table-sort-icon {
+  color: #00b092;
+}
+.table > tbody th > i.table-sort-icon {
+  color: #777777;
+}

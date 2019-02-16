@@ -1,0 +1,123 @@
+.table-pager {
+  padding: 0;
+  min-height: 35px;
+  white-space: inherit !important;
+}
+.table-pager:before,
+.table-pager .table-pager-container:before,
+.table-pager:after,
+.table-pager .table-pager-container:after {
+  content: " ";
+  display: table;
+}
+.table-pager:after,
+.table-pager .table-pager-container:after {
+  clear: both;
+}
+.table-pager .table-pager-container {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0 4px;
+  position: relative;
+}
+.table-pager .table-pager-group {
+  display: inline-block;
+  float: right;
+}
+.table-pager .table-pager-group > .btn-group {
+  padding: 4px 5px 4px 0;
+  white-space: nowrap;
+}
+.table-pager .table-pager-size-list {
+  padding: 0 2px;
+  text-align: left;
+  min-width: 60px;
+  display: inline-block;
+}
+.table-pager .table-pager-page-number {
+  display: inline-block;
+  padding-left: 6px;
+  padding-right: 6px;
+  width: 41px;
+  text-align: right;
+}
+.table-pager .table-pager-split,
+.table-pager .table-pager-page-count {
+  display: inline-block;
+}
+.table-pager .table-pager-split {
+  margin: 0 5px;
+}
+.table-pager + .table,
+.table-pager + .table-responsive > .table {
+  border-top: 1px solid transparent;
+}
+.table-pager + .table tbody > tr:empty,
+.table-pager + .table-responsive > .table tbody > tr:empty {
+  height: 70px;
+}
+.table {
+  position: relative;
+}
+caption[data-table-pager-loading-info=true] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  text-align: center;
+}
+caption[data-table-pager-loading-info=true].default-loading-icon {
+  font-size: 32px;
+}
+caption[data-table-pager-loading-info=true].default-loading-icon > i:before {
+  content: "\f013";
+}
+@media (max-width: 767px) {
+  .table-pager .table-pager-container {
+    padding: 0;
+  }
+  .table-pager .table-pager-group.group1,
+  .table-pager .table-pager-group.group2 {
+    padding: 0 4px;
+    vertical-align: top;
+    float: none;
+  }
+  .table-pager .table-pager-group.group1 {
+    text-align: left;
+    display: table;
+    width: 100%;
+  }
+  .table-pager .table-pager-group.group1 .btn-group {
+    display: table-cell;
+    padding: 4px 5px 4px 0;
+  }
+  .table-pager .table-pager-group.group1 .btn-group:last-child {
+    padding-right: 0;
+  }
+  .table-pager .table-pager-group.group2 {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border-top: 1px solid #ddd;
+  }
+  .table-pager .btn {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
+.table-pager .table-pager-size-list:focus {
+  background-color: #fff;
+}
+.table-pager + .table,
+.table-pager + .table-responsive > .table {
+  border-top-color: #ddd;
+}
+caption[data-table-pager-loading-info=true] {
+  background: rgba(255, 255, 255, 0.7);
+}
+caption[data-table-pager-loading-info=true].default-loading-icon {
+  color: #0071ce;
+}
